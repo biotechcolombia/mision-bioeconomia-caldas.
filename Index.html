@@ -1,0 +1,2453 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Misión de Sabios por Caldas — Bioeconomía & Política Pública CTeI</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.5.1" integrity="sha384-jb8JQMbMoBUzgWatfe6COACi2ljcDdZQ2OxczGA3bGNeWe+6DChMTBJemed7ZnvJ" crossorigin="anonymous"></script>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --verde-selva: #1a4731;
+    --verde-medio: #2d6a4f;
+    --verde-claro: #40916c;
+    --verde-hoja: #52b788;
+    --verde-menta: #74c69d;
+    --dorado: #c9a227;
+    --dorado-claro: #f0c040;
+    --tierra: #8b5e3c;
+    --crema: #faf7f0;
+    --crema-oscuro: #f0ebe0;
+    --blanco: #ffffff;
+    --gris-texto: #2c2c2c;
+    --gris-suave: #6b7280;
+    --gris-linea: #e0ddd5;
+    --azul-agua: #0077b6;
+    --naranja: #e76f51;
+    --sombra: rgba(26,71,49,0.12);
+    --sombra-fuerte: rgba(26,71,49,0.22);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--crema);
+    color: var(--gris-texto);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* HERO */
+  .hero {
+    background: var(--verde-selva);
+    background-image:
+      radial-gradient(ellipse 80% 60% at 70% 30%, rgba(64,145,108,0.25) 0%, transparent 70%),
+      radial-gradient(ellipse 50% 80% at 10% 80%, rgba(201,162,39,0.12) 0%, transparent 60%);
+    color: white;
+    padding: 48px 40px 36px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    right: -80px; top: -80px;
+    width: 400px; height: 400px;
+    border-radius: 50%;
+    border: 1px solid rgba(116,198,157,0.15);
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    right: 40px; top: 40px;
+    width: 200px; height: 200px;
+    border-radius: 50%;
+    border: 1px solid rgba(116,198,157,0.1);
+  }
+  .hero-inner { max-width: 1280px; margin: 0 auto; position: relative; z-index: 2; }
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(116,198,157,0.2);
+    border: 1px solid rgba(116,198,157,0.35);
+    color: var(--verde-menta);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    padding: 6px 14px;
+    border-radius: 20px;
+    margin-bottom: 20px;
+  }
+  .hero-badge::before { content: '🌿'; }
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 4vw, 52px);
+    font-weight: 900;
+    line-height: 1.12;
+    margin-bottom: 14px;
+    max-width: 780px;
+  }
+  .hero h1 span { color: var(--dorado-claro); }
+  .hero-sub {
+    font-size: 15px;
+    color: rgba(255,255,255,0.72);
+    max-width: 600px;
+    line-height: 1.7;
+    margin-bottom: 28px;
+    font-weight: 300;
+  }
+  .hero-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .hero-tag {
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    color: rgba(255,255,255,0.82);
+    font-size: 12px;
+    padding: 5px 12px;
+    border-radius: 4px;
+    font-weight: 500;
+  }
+
+  /* NAV TABS */
+  .nav-tabs {
+    background: var(--verde-medio);
+    padding: 0 40px;
+    display: flex;
+    gap: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+  .nav-tabs::-webkit-scrollbar { display: none; }
+  .nav-tab {
+    color: rgba(255,255,255,0.62);
+    font-size: 13px;
+    font-weight: 500;
+    padding: 14px 22px;
+    cursor: pointer;
+    border-bottom: 2.5px solid transparent;
+    white-space: nowrap;
+    transition: all .2s;
+    letter-spacing: 0.3px;
+  }
+  .nav-tab:hover { color: rgba(255,255,255,0.92); }
+  .nav-tab.active {
+    color: var(--dorado-claro);
+    border-bottom-color: var(--dorado-claro);
+  }
+
+  /* LAYOUT */
+  .main { max-width: 1280px; margin: 0 auto; padding: 32px 40px 60px; }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  /* CARDS ROW */
+  .cards-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+    margin-bottom: 28px;
+  }
+  .kpi-card {
+    background: var(--blanco);
+    border-radius: 12px;
+    padding: 22px 20px;
+    box-shadow: 0 2px 8px var(--sombra);
+    border-top: 3px solid var(--verde-claro);
+    position: relative;
+    overflow: hidden;
+  }
+  .kpi-card.dorado { border-top-color: var(--dorado); }
+  .kpi-card.agua { border-top-color: var(--azul-agua); }
+  .kpi-card.naranja { border-top-color: var(--naranja); }
+  .kpi-card.tierra { border-top-color: var(--tierra); }
+  .kpi-label { font-size: 11px; font-weight: 600; color: var(--gris-suave); letter-spacing: 0.8px; text-transform: uppercase; margin-bottom: 8px; }
+  .kpi-value { font-family: 'Playfair Display', serif; font-size: 36px; font-weight: 700; color: var(--verde-selva); line-height: 1; }
+  .kpi-card.dorado .kpi-value { color: var(--dorado); }
+  .kpi-card.agua .kpi-value { color: var(--azul-agua); }
+  .kpi-card.naranja .kpi-value { color: var(--naranja); }
+  .kpi-card.tierra .kpi-value { color: var(--tierra); }
+  .kpi-desc { font-size: 12px; color: var(--gris-suave); margin-top: 6px; line-height: 1.5; }
+
+  /* SECTIONS GRID */
+  .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+  .grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 24px; }
+  .grid-2-1 { display: grid; grid-template-columns: 2fr 1fr; gap: 20px; margin-bottom: 24px; }
+
+  .panel {
+    background: var(--blanco);
+    border-radius: 12px;
+    padding: 24px;
+    box-shadow: 0 2px 8px var(--sombra);
+  }
+  .panel-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--verde-selva);
+    margin-bottom: 6px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  .panel-title .icon {
+    width: 28px; height: 28px;
+    background: rgba(52,181,120,0.12);
+    border-radius: 6px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+  .panel-sub { font-size: 12px; color: var(--gris-suave); margin-bottom: 16px; }
+
+  /* CHART */
+  .chart-wrap { position: relative; }
+  .chart-wrap canvas { max-height: 280px; }
+
+  /* NODES */
+  .nodo-card {
+    background: var(--blanco);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px var(--sombra);
+    border-left: 4px solid var(--verde-claro);
+    margin-bottom: 16px;
+    transition: transform .15s;
+  }
+  .nodo-card:hover { transform: translateX(3px); }
+  .nodo-card.n2 { border-left-color: var(--azul-agua); }
+  .nodo-card.n3 { border-left-color: var(--naranja); }
+  .nodo-card.n4 { border-left-color: var(--dorado); }
+  .nodo-card.n5 { border-left-color: var(--tierra); }
+  .nodo-header { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; }
+  .nodo-num { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--verde-claro); }
+  .nodo-card.n2 .nodo-num { color: var(--azul-agua); }
+  .nodo-card.n3 .nodo-num { color: var(--naranja); }
+  .nodo-card.n4 .nodo-num { color: var(--dorado); }
+  .nodo-card.n5 .nodo-num { color: var(--tierra); }
+  .nodo-title { font-family: 'Playfair Display', serif; font-size: 15px; font-weight: 700; color: var(--gris-texto); margin-bottom: 8px; }
+  .nodo-desc { font-size: 13px; color: var(--gris-suave); line-height: 1.6; }
+  .nodo-barriers, .nodo-opps {
+    display: flex; flex-direction: column; gap: 6px; margin-top: 12px;
+  }
+  .barrier-item, .opp-item {
+    display: flex; align-items: flex-start; gap: 8px; font-size: 12px; line-height: 1.5;
+  }
+  .barrier-item::before { content: '⚠'; font-size: 12px; flex-shrink: 0; margin-top: 1px; }
+  .opp-item::before { content: '✓'; color: var(--verde-claro); font-size: 13px; font-weight: 700; flex-shrink: 0; }
+
+  /* LINEAMIENTOS */
+  .lin-card {
+    background: var(--crema);
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 12px;
+    border-left: 3px solid var(--verde-hoja);
+  }
+  .lin-card:nth-child(2) { border-left-color: var(--dorado); }
+  .lin-card:nth-child(3) { border-left-color: var(--naranja); }
+  .lin-card:nth-child(4) { border-left-color: var(--azul-agua); }
+  .lin-code { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.2px; color: var(--gris-suave); margin-bottom: 5px; }
+  .lin-title { font-size: 14px; font-weight: 600; color: var(--gris-texto); margin-bottom: 6px; }
+  .lin-obj { font-size: 12px; color: var(--gris-suave); line-height: 1.6; }
+  .lin-actions { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+  .lin-action-tag {
+    font-size: 11px;
+    background: rgba(52,181,120,0.1);
+    color: var(--verde-medio);
+    padding: 3px 9px;
+    border-radius: 20px;
+    border: 1px solid rgba(52,181,120,0.2);
+  }
+
+  /* MISIONES EMBLEMATICAS */
+  .me-card {
+    background: linear-gradient(135deg, var(--verde-selva) 0%, var(--verde-medio) 100%);
+    border-radius: 14px;
+    padding: 24px;
+    color: white;
+    position: relative;
+    overflow: hidden;
+    margin-bottom: 16px;
+  }
+  .me-card.me2 { background: linear-gradient(135deg, #0d3b6e 0%, #0077b6 100%); }
+  .me-card.me3 { background: linear-gradient(135deg, #5c3317 0%, #8b5e3c 100%); }
+  .me-card::before {
+    content: '';
+    position: absolute;
+    right: -30px; top: -30px;
+    width: 140px; height: 140px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+  }
+  .me-num { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1.5px; color: rgba(255,255,255,0.55); margin-bottom: 8px; }
+  .me-title { font-family: 'Playfair Display', serif; font-size: 17px; font-weight: 700; margin-bottom: 10px; position: relative; z-index: 1; }
+  .me-desc { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.6; position: relative; z-index: 1; }
+  .me-nodos { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 14px; position: relative; z-index: 1; }
+  .me-nodo-tag {
+    font-size: 11px;
+    background: rgba(255,255,255,0.12);
+    border: 1px solid rgba(255,255,255,0.2);
+    padding: 4px 10px;
+    border-radius: 20px;
+    color: rgba(255,255,255,0.9);
+  }
+
+  /* DEMANDAS */
+  .demanda-card {
+    background: var(--blanco);
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 2px 8px var(--sombra);
+    margin-bottom: 14px;
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 16px;
+    align-items: start;
+  }
+  .demanda-num {
+    width: 48px; height: 48px;
+    background: var(--verde-selva);
+    border-radius: 10px;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--dorado-claro);
+    flex-shrink: 0;
+  }
+  .demanda-title { font-size: 14px; font-weight: 600; color: var(--gris-texto); margin-bottom: 6px; }
+  .demanda-propuesta {
+    display: inline-block;
+    font-size: 11px;
+    background: rgba(82,183,136,0.12);
+    color: var(--verde-medio);
+    padding: 3px 10px;
+    border-radius: 20px;
+    margin-bottom: 8px;
+    font-weight: 600;
+  }
+  .demanda-desc { font-size: 12.5px; color: var(--gris-suave); line-height: 1.65; }
+
+  /* SECTORES BIOECONOMIA */
+  .sector-card {
+    background: var(--blanco);
+    border-radius: 12px;
+    padding: 18px;
+    box-shadow: 0 2px 8px var(--sombra);
+    display: flex; flex-direction: column;
+  }
+  .sector-icon { font-size: 28px; margin-bottom: 10px; }
+  .sector-name { font-size: 14px; font-weight: 700; color: var(--verde-selva); margin-bottom: 8px; }
+  .sector-items { display: flex; flex-direction: column; gap: 5px; }
+  .sector-item { font-size: 11.5px; color: var(--gris-suave); display: flex; gap: 6px; align-items: flex-start; line-height: 1.4; }
+  .sector-item::before { content: '·'; font-weight: 700; color: var(--verde-hoja); flex-shrink: 0; }
+
+  /* PROPUESTAS */
+  .propuesta-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .prop-card {
+    background: var(--crema-oscuro);
+    border-radius: 10px;
+    padding: 16px;
+    position: relative;
+  }
+  .prop-num {
+    position: absolute; top: 14px; right: 14px;
+    font-family: 'Playfair Display', serif;
+    font-size: 40px;
+    font-weight: 900;
+    color: rgba(26,71,49,0.06);
+    line-height: 1;
+  }
+  .prop-title { font-size: 13px; font-weight: 600; color: var(--verde-selva); margin-bottom: 6px; }
+  .prop-desc { font-size: 12px; color: var(--gris-suave); line-height: 1.6; }
+
+  /* INDICADORES */
+  .indicador-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .indicador-table thead th {
+    background: var(--verde-selva);
+    color: white;
+    padding: 10px 14px;
+    text-align: left;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .indicador-table thead th:first-child { border-radius: 6px 0 0 0; }
+  .indicador-table thead th:last-child { border-radius: 0 6px 0 0; }
+  .indicador-table tbody tr:nth-child(even) { background: var(--crema); }
+  .indicador-table tbody td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--gris-linea);
+    color: var(--gris-texto);
+    line-height: 1.5;
+  }
+  .indicador-table tbody td:first-child { font-weight: 600; }
+  .badge-tipo {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .badge-cp { background: rgba(82,183,136,0.2); color: var(--verde-medio); }
+  .badge-mp { background: rgba(201,162,39,0.2); color: var(--dorado); }
+  .badge-lp { background: rgba(139,94,60,0.2); color: var(--tierra); }
+
+  /* ESTRATEGIA SECTORIAL */
+  .linea-card {
+    background: var(--blanco);
+    border-radius: 10px;
+    padding: 18px;
+    box-shadow: 0 2px 6px var(--sombra);
+    margin-bottom: 12px;
+  }
+  .linea-header { display: flex; gap: 12px; align-items: flex-start; margin-bottom: 8px; }
+  .linea-dot {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 15px;
+    flex-shrink: 0;
+    font-weight: 700;
+    color: white;
+    font-family: 'Playfair Display', serif;
+  }
+  .linea-dot.verde { background: var(--verde-medio); }
+  .linea-dot.azul { background: var(--azul-agua); }
+  .linea-dot.naranja { background: var(--naranja); }
+  .linea-dot.dorado { background: var(--dorado); }
+  .linea-info-title { font-size: 14px; font-weight: 600; color: var(--gris-texto); }
+  .linea-info-tipo { font-size: 11px; color: var(--gris-suave); margin-top: 2px; }
+  .linea-acciones { display: flex; flex-wrap: wrap; gap: 6px; }
+  .linea-accion {
+    font-size: 11px;
+    background: var(--crema);
+    border: 1px solid var(--gris-linea);
+    padding: 4px 10px;
+    border-radius: 4px;
+    color: var(--gris-texto);
+  }
+
+  /* CONTEXT PANEL */
+  .context-band {
+    background: var(--verde-selva);
+    border-radius: 12px;
+    padding: 24px 28px;
+    color: white;
+    margin-bottom: 24px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .context-item h4 { font-size: 13px; font-weight: 600; color: var(--verde-menta); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.8px; }
+  .context-item p { font-size: 13px; color: rgba(255,255,255,0.8); line-height: 1.65; }
+
+  /* TIMELINE */
+  .timeline { position: relative; padding-left: 28px; }
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 8px; top: 4px; bottom: 0;
+    width: 2px;
+    background: var(--gris-linea);
+  }
+  .timeline-item { position: relative; margin-bottom: 18px; }
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: -24px; top: 5px;
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--verde-claro);
+    border: 2px solid var(--blanco);
+    box-shadow: 0 0 0 2px var(--verde-claro);
+  }
+  .timeline-year { font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--verde-claro); letter-spacing: 0.8px; }
+  .timeline-text { font-size: 13px; color: var(--gris-texto); line-height: 1.6; margin-top: 3px; }
+
+  /* PROGRESS BARS */
+  .prog-row { margin-bottom: 14px; }
+  .prog-label { display: flex; justify-content: space-between; font-size: 12px; margin-bottom: 6px; }
+  .prog-bar { background: var(--crema-oscuro); border-radius: 6px; height: 8px; overflow: hidden; }
+  .prog-fill { border-radius: 6px; height: 100%; transition: width 1s ease; }
+
+  /* RESPONSIVE */
+  @media (max-width: 900px) {
+    .hero { padding: 32px 20px 28px; }
+    .nav-tabs { padding: 0 20px; }
+    .main { padding: 20px 20px 40px; }
+    .grid-2, .grid-3, .grid-2-1 { grid-template-columns: 1fr; }
+    .context-band { grid-template-columns: 1fr; }
+    .propuesta-grid { grid-template-columns: 1fr; }
+  }
+
+  /* SCROLL ANIMATION */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .section.active .panel,
+  .section.active .kpi-card,
+  .section.active .nodo-card,
+  .section.active .demanda-card,
+  .section.active .me-card {
+    animation: fadeUp .3s ease both;
+  }
+
+  .section-heading {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--verde-selva);
+    margin-bottom: 6px;
+  }
+  .section-subheading {
+    font-size: 14px;
+    color: var(--gris-suave);
+    margin-bottom: 24px;
+    line-height: 1.6;
+  }
+  .divider { height: 1px; background: var(--gris-linea); margin: 24px 0; }
+
+  /* FOOTER */
+  .footer {
+    background: var(--verde-selva);
+    color: rgba(255,255,255,0.5);
+    text-align: center;
+    font-size: 12px;
+    padding: 24px 24px 20px;
+    margin-top: 40px;
+    line-height: 1.8;
+  }
+  .footer strong { color: rgba(255,255,255,0.8); }
+  .footer-author {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(255,255,255,0.08);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 8px;
+    padding: 10px 18px;
+    margin-bottom: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .footer-author-name {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--dorado-claro);
+    letter-spacing: 0.3px;
+  }
+  .footer-author-role {
+    font-size: 11px;
+    color: rgba(255,255,255,0.65);
+  }
+  .footer-author-sep {
+    color: rgba(255,255,255,0.25);
+    font-size: 14px;
+  }
+  .footer-author a {
+    color: var(--verde-menta);
+    text-decoration: none;
+    font-size: 12px;
+    transition: color .15s;
+  }
+  .footer-author a:hover { color: white; text-decoration: underline; }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-badge">Gobernación de Caldas · CINDE · OEI</div>
+    <h1>Misión de Sabios por <span>Caldas</span><br>Bioeconomía & Política Pública CTeI</h1>
+    <p class="hero-sub">Panel interactivo de la Misión de Sabios por Caldas 2020–2021: diagnóstico territorial, lineamientos de política pública en Ciencia, Tecnología e Innovación, y la hoja de ruta hacia un modelo bioeconómico sostenible.</p>
+    <div class="hero-tags">
+      <span class="hero-tag">🌿 Bioeconomía</span>
+      <span class="hero-tag">🎨 Economía Creativa</span>
+      <span class="hero-tag">💧 Agua & Clima</span>
+      <span class="hero-tag">🔬 CTeI+E</span>
+      <span class="hero-tag">📋 Ordenanza 952</span>
+      <span class="hero-tag">📊 15 Lineamientos</span>
+    </div>
+  </div>
+</div>
+
+<!-- NAV -->
+<nav class="nav-tabs" id="navTabs">
+  <div class="nav-tab active" data-section="overview">🌍 Visión General</div>
+  <div class="nav-tab" data-section="bioeconomia">🌿 Bioeconomía</div>
+  <div class="nav-tab" data-section="nodos">🔬 Nodos Misión</div>
+  <div class="nav-tab" data-section="politica">📋 Política Pública</div>
+  <div class="nav-tab" data-section="lineamientos">🗺 Lineamientos</div>
+  <div class="nav-tab" data-section="plan">📅 Plan de Acción</div>
+  <div class="nav-tab" data-section="proyectos">🚀 Proyectos Priorizados</div>
+  <div class="nav-tab" data-section="contexto">📖 Contexto</div>
+</nav>
+
+<!-- MAIN CONTENT -->
+<div class="main">
+
+  <!-- ======= SECTION 1: OVERVIEW ======= -->
+  <div id="overview" class="section active">
+    <h2 class="section-heading">Caldas: Equitativa, Productiva y Sustentable</h2>
+    <p class="section-subheading">Síntesis ejecutiva del ecosistema de CTeI de Caldas — primer departamento de Colombia en regionalizar la Misión Internacional de Sabios 2019.</p>
+
+    <div class="cards-row">
+      <div class="kpi-card">
+        <div class="kpi-label">Grupos de Investigación</div>
+        <div class="kpi-value">143</div>
+        <div class="kpi-desc">adscritos al departamento (Nov 2020), <strong>83</strong> en principios de bioeconomía</div>
+      </div>
+      <div class="kpi-card dorado">
+        <div class="kpi-label">Empresas Economía Naranja</div>
+        <div class="kpi-value">664</div>
+        <div class="kpi-desc">68% en Manizales · 4.565 empleados directos</div>
+      </div>
+      <div class="kpi-card agua">
+        <div class="kpi-label">Pos. IDC 2022</div>
+        <div class="kpi-value">7°</div>
+        <div class="kpi-desc">de 33 departamentos · desempeño medio-alto</div>
+      </div>
+      <div class="kpi-card naranja">
+        <div class="kpi-label">Publicaciones Bioeconomía</div>
+        <div class="kpi-value">985</div>
+        <div class="kpi-desc">artículos · 430 proyectos registrados en ScienTI</div>
+      </div>
+      <div class="kpi-card tierra">
+        <div class="kpi-label">Nodos Misión Caldas</div>
+        <div class="kpi-value">5</div>
+        <div class="kpi-desc">3 Misiones Emblemáticas · 15 Lineamientos</div>
+      </div>
+    </div>
+
+    <div class="grid-2-1">
+      <div class="panel">
+        <div class="panel-title"><span class="icon">📊</span>Capacidad Científica en Bioeconomía — Caldas (ScienTI, 2020)</div>
+        <p class="panel-sub">Proyectos y artículos por principio de bioeconomía en grupos de investigación del departamento</p>
+        <div class="chart-wrap">
+          <canvas id="chartBiocap"></canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><span class="icon">🏆</span>Posición Caldas · IDIC 2021</div>
+        <p class="panel-sub">7° puesto · grupo desempeño medio-alto</p>
+        <div style="margin-bottom: 14px;">
+          <div class="prog-row">
+            <div class="prog-label"><span>Instituciones</span><span style="color:var(--verde-claro);font-weight:600;">Liderazgo</span></div>
+            <div class="prog-bar"><div class="prog-fill" style="background:var(--verde-claro);width:88%"></div></div>
+          </div>
+          <div class="prog-row">
+            <div class="prog-label"><span>Educación Media</span><span style="color:var(--dorado);font-weight:600;">Fortaleza</span></div>
+            <div class="prog-bar"><div class="prog-fill" style="background:var(--dorado);width:74%"></div></div>
+          </div>
+          <div class="prog-row">
+            <div class="prog-label"><span>Investigación</span><span style="color:var(--azul-agua);font-weight:600;">Medio-Alto</span></div>
+            <div class="prog-bar"><div class="prog-fill" style="background:var(--azul-agua);width:68%"></div></div>
+          </div>
+          <div class="prog-row">
+            <div class="prog-label"><span>Infraestructura TIC</span><span style="color:var(--naranja);font-weight:600;">A mejorar</span></div>
+            <div class="prog-bar"><div class="prog-fill" style="background:var(--naranja);width:42%"></div></div>
+          </div>
+          <div class="prog-row">
+            <div class="prog-label"><span>Inversión ACTI</span><span style="color:var(--naranja);font-weight:600;">Crítico</span></div>
+            <div class="prog-bar"><div class="prog-fill" style="background:var(--naranja);width:28%"></div></div>
+          </div>
+        </div>
+        <div style="background:rgba(26,71,49,0.05);border-radius:8px;padding:12px;font-size:12px;color:var(--gris-suave);">
+          ⚠ Caldas representa solo el <strong>1.3%</strong> de la inversión nacional en ACTI, siendo el Eje Cafetero el 27.3%.
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-3">
+      <div class="me-card">
+        <div class="me-num">Misión Emblemática 1</div>
+        <div class="me-title">Red Ecosistémica del Conocimiento: Caldas Territorio Biointeligente y Sostenible</div>
+        <div class="me-desc">Gestión del conocimiento en red ecosistémica basada en la diversidad natural y cultural como activos estratégicos del territorio.</div>
+        <div class="me-nodos">
+          <span class="me-nodo-tag">Nodo 1: Bioeconomía</span>
+          <span class="me-nodo-tag">Nodo 2: Agua</span>
+        </div>
+      </div>
+      <div class="me-card me2">
+        <div class="me-num">Misión Emblemática 2</div>
+        <div class="me-title">Caldas hacia un Nuevo Modelo Productivo, Sostenible y Equitativo</div>
+        <div class="me-desc">Transformación productiva basada en economía circular, manufactura inteligente y aprovechamiento sostenible del territorio.</div>
+        <div class="me-nodos">
+          <span class="me-nodo-tag">Nodo 3: Modelo Productivo</span>
+        </div>
+      </div>
+      <div class="me-card me3">
+        <div class="me-num">Misión Emblemática 3</div>
+        <div class="me-title">Caldas Educada, Saludable, Científica e Innovadora</div>
+        <div class="me-desc">Cierre de brechas sociales mediante CTeI con enfoque en salud, equidad, formación y apropiación del conocimiento.</div>
+        <div class="me-nodos">
+          <span class="me-nodo-tag">Nodo 4: Conocimiento</span>
+          <span class="me-nodo-tag">Nodo 5: Educación</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======= SECTION 2: BIOECONOMÍA ======= -->
+  <div id="bioeconomia" class="section">
+    <h2 class="section-heading">Bioeconomía para Caldas</h2>
+    <p class="section-subheading">Caldas, ubicado en el segundo país más biodiverso del mundo, tiene como reto la consolidación de modelos económicos basados en el uso y aprovechamiento racional de los recursos naturales y culturales.</p>
+
+    <div class="context-band">
+      <div class="context-item">
+        <h4>Definición — Cumbre Global de Bioeconomía 2018</h4>
+        <p>"La bioeconomía es un modelo socioeconómico que reduce la dependencia en recursos no renovables y fósiles mediante el uso sostenible de la biodiversidad y los recursos biológicos para la producción de bienes, servicios y energía."</p>
+      </div>
+      <div class="context-item">
+        <h4>Visión Caldas 2032</h4>
+        <p>Posicionar a Caldas como lider en bioeconomía regional con base en sus 6 áreas estratégicas nacionales: biodiversidad, Colombia biointeligente, agro productivo, biomasa verde, salud y bienestar, y herencia cultural.</p>
+      </div>
+    </div>
+
+    <div class="cards-row">
+      <div class="kpi-card">
+        <div class="kpi-label">Rango Altitudinal</div>
+        <div class="kpi-value">200–5.432</div>
+        <div class="kpi-desc">metros s.n.m. · todos los pisos térmicos</div>
+      </div>
+      <div class="kpi-card dorado">
+        <div class="kpi-label">Inversión Caldas Bio-Región</div>
+        <div class="kpi-value">$19B</div>
+        <div class="kpi-desc">pesos SGR · período 2013–2017</div>
+      </div>
+      <div class="kpi-card agua">
+        <div class="kpi-label">Grupos en Bioeconomía</div>
+        <div class="kpi-value">83</div>
+        <div class="kpi-desc">de 143 grupos totales (58%)</div>
+      </div>
+      <div class="kpi-card naranja">
+        <div class="kpi-label">Proyectos Bioeconomía</div>
+        <div class="kpi-value">430</div>
+        <div class="kpi-desc">registrados en plataforma ScienTI 2020</div>
+      </div>
+    </div>
+
+    <h3 style="font-family:'Playfair Display',serif;font-size:17px;color:var(--verde-selva);margin-bottom:14px;">Sectores Productivos con Potencial Bioeconomía</h3>
+    <div class="grid-2" style="grid-template-columns:repeat(auto-fit,minmax(240px,1fr));margin-bottom:24px;">
+      <div class="sector-card">
+        <div class="sector-icon">🌾</div>
+        <div class="sector-name">Sector Alimentos</div>
+        <div class="sector-items">
+          <div class="sector-item">Alimentos funcionales y orgánicos</div>
+          <div class="sector-item">Compuestos bioactivos y metabolómica</div>
+          <div class="sector-item">Bioplaguicidas, bioabonos y biofertilizantes</div>
+          <div class="sector-item">Ingeniería genética aplicada</div>
+          <div class="sector-item">Tecnología enzimática</div>
+        </div>
+      </div>
+      <div class="sector-card">
+        <div class="sector-icon">🏭</div>
+        <div class="sector-name">Sector Agroindustria</div>
+        <div class="sector-items">
+          <div class="sector-item">Biocombustibles y energías limpias</div>
+          <div class="sector-item">Productos ecoeficientes y biodegradables</div>
+          <div class="sector-item">Bioprospección y controladores biológicos</div>
+          <div class="sector-item">Agronomía de precisión</div>
+          <div class="sector-item">Tratamiento biológico de aguas</div>
+        </div>
+      </div>
+      <div class="sector-card">
+        <div class="sector-icon">💄</div>
+        <div class="sector-name">Sector Cosmética</div>
+        <div class="sector-items">
+          <div class="sector-item">Protección solar y anti-fotoenvejecimiento</div>
+          <div class="sector-item">Colorantes naturales sin preservativos dañinos</div>
+          <div class="sector-item">Fragancias de plantas exóticas tropicales</div>
+          <div class="sector-item">Empaques biodegradables sin petroquímicos</div>
+        </div>
+      </div>
+      <div class="sector-card">
+        <div class="sector-icon">🧬</div>
+        <div class="sector-name">Sector Salud</div>
+        <div class="sector-items">
+          <div class="sector-item">Extractos y mezclas de plantas medicinales</div>
+          <div class="sector-item">Agentes esterilizantes de bajo impacto ambiental</div>
+          <div class="sector-item">Medicina de precisión con datos genómicos</div>
+          <div class="sector-item">Nuevos antimicrobianos de origen biológico</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="panel">
+        <div class="panel-title"><span class="icon">📈</span>Producción Científica por Principio Bioeconomía</div>
+        <p class="panel-sub">Número de proyectos y artículos registrados por los grupos de investigación de Caldas</p>
+        <div class="chart-wrap">
+          <canvas id="chartPrincipios"></canvas>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><span class="icon">⚡</span>Líneas Estratégicas Nacionales para Bioeconomía</div>
+        <p class="panel-sub">6 áreas estratégicas definidas en la Estrategia Nacional de Bioeconomía (CONPES 3934 · 2018)</p>
+        <div style="margin-top:10px;">
+          <div class="lin-card">
+            <div class="lin-code">L1</div>
+            <div class="lin-title">🌲 Biodiversidad & Servicios Ecosistémicos</div>
+            <div class="lin-obj">Conocer, documentar y valorar la biodiversidad para su aprovechamiento sostenible.</div>
+          </div>
+          <div class="lin-card">
+            <div class="lin-code">L2</div>
+            <div class="lin-title">🧠 Colombia Biointeligente</div>
+            <div class="lin-obj">Aplicar IA, big data y biotecnología al conocimiento y uso de la biodiversidad.</div>
+          </div>
+          <div class="lin-card">
+            <div class="lin-code">L3</div>
+            <div class="lin-title">🌱 Agro Productivo y Sostenible</div>
+            <div class="lin-obj">Transformar la producción agropecuaria con tecnologías emergentes.</div>
+          </div>
+          <div class="lin-card">
+            <div class="lin-code">L4</div>
+            <div class="lin-title">♻ Biomasa & Química Verde</div>
+            <div class="lin-obj">Máximo aprovechamiento de biomasa con cero desperdicios.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h3 style="font-family:'Playfair Display',serif;font-size:17px;color:var(--verde-selva);margin:20px 0 14px;">6 Propuestas Modelo Bioeconómico Caldas</h3>
+    <div class="propuesta-grid">
+      <div class="prop-card">
+        <div class="prop-num">1</div>
+        <div class="prop-title">Modelo de Gobernanza CTeI+E</div>
+        <div class="prop-desc">Gobernanza participativa y descentralizada con cuádruple hélice (Universidad-Empresa-Estado-Sociedad Civil). Comités CTeI por subregión.</div>
+      </div>
+      <div class="prop-card">
+        <div class="prop-num">2</div>
+        <div class="prop-title">Regionalización de la Política Pública</div>
+        <div class="prop-desc">Actualización continua de políticas nacionales e internacionales adaptadas al territorio. Visión estratégica centrada en la naturaleza.</div>
+      </div>
+      <div class="prop-card">
+        <div class="prop-num">3</div>
+        <div class="prop-title">Educación CTeI con Enfoque en Ciencias de la Vida</div>
+        <div class="prop-desc">Formación en industrias creativas y ciencias de la vida. Cierre de brechas rurales/urbanas en calidad educativa.</div>
+      </div>
+      <div class="prop-card">
+        <div class="prop-num">4</div>
+        <div class="prop-title">Nuevos Modelos de Negocio NBIC</div>
+        <div class="prop-desc">Modelos de negocio con tecnologías nano-bio-info-cogno para sofisticar sectores económicos priorizados de Caldas.</div>
+      </div>
+      <div class="prop-card">
+        <div class="prop-num">5</div>
+        <div class="prop-title">Repositorios de Conocimiento</div>
+        <div class="prop-desc">Infraestructura computacional avanzada con IoT, blockchain, IA y big data para gestión y análisis de datos del ecosistema territorial.</div>
+      </div>
+      <div class="prop-card">
+        <div class="prop-num">6</div>
+        <div class="prop-title">Caldas: Mirada Bioeconómica, Creativa y Cultural</div>
+        <div class="prop-desc">Integración de bioeconomía, economía creativa y diversidad cultural en un modelo de desarrollo sostenible con identidad propia.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======= SECTION 3: NODOS ======= -->
+  <div id="nodos" class="section">
+    <h2 class="section-heading">Los 5 Nodos de la Misión de Sabios por Caldas</h2>
+    <p class="section-subheading">Estructura temática de la Misión organizada en 5 nodos de trabajo participativo con 37 comisionados expertos de universidades, centros de investigación, empresas y la Gobernación de Caldas.</p>
+
+    <div class="nodo-card">
+      <div class="nodo-header">
+        <div>
+          <div class="nodo-num">Nodo 1 · Misión Emblemática 1</div>
+          <div class="nodo-title">Biodiversidad, Bioeconomía y Economía Creativa</div>
+        </div>
+      </div>
+      <div class="nodo-desc">Colombia es el segundo país más biodiverso del mundo. Caldas tiene riqueza altitudinal de 200 a 5.432 msnm con todos los pisos térmicos, comunidades Embera, afrodescendientes, y el Paisaje Cultural Cafetero (UNESCO 2011). Contiene el potencial para implementar bioeconomía y economía creativa como motores de desarrollo.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px;">
+        <div>
+          <div style="font-size:12px;font-weight:600;color:var(--verde-claro);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">Fortalezas</div>
+          <div class="nodo-opps">
+            <div class="opp-item">Turismo de naturaleza: avistamiento de aves, PCC UNESCO</div>
+            <div class="opp-item">664 empresas Economía Naranja · 4.565 empleos</div>
+            <div class="opp-item">83 grupos investigación en principios bioeconomía</div>
+            <div class="opp-item">Centro BIOS de Bioinformática y Biología Computacional</div>
+            <div class="opp-item">Caldas: 11.54% empleos en actividades economía naranja</div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:600;color:var(--naranja);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">Barreras</div>
+          <div class="nodo-barriers">
+            <div class="barrier-item">Falta investigación de base sobre biodiversidad y sus potencialidades</div>
+            <div class="barrier-item">Silos institucionales que impiden acciones de la cuádruple hélice</div>
+            <div class="barrier-item">Centralismo CTeI en Manizales (falta inversión subregional)</div>
+            <div class="barrier-item">Ausencia de Áreas de Desarrollo Naranja (ADN) en Caldas</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nodo-card n2">
+      <div class="nodo-header">
+        <div>
+          <div class="nodo-num" style="color:var(--azul-agua);">Nodo 2 · Misión Emblemática 1</div>
+          <div class="nodo-title">Agua y Cambio Climático</div>
+        </div>
+      </div>
+      <div class="nodo-desc">Caldas cuenta con una densa red hídrica andina con régimen bimodal de precipitaciones. Tiene 8 consejos de cuenca y el Plan Integral de Gestión del Cambio Climático Territorial (PIGCCT-Caldas, 2020). El reto es generar biocapacidades desde la naturaleza y sociocapacidades desde la cultura.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px;">
+        <div>
+          <div style="font-size:12px;font-weight:600;color:var(--azul-agua);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">Fortalezas</div>
+          <div class="nodo-opps">
+            <div class="opp-item">PIGCCT-Caldas adoptado (Decreto 0191 / 2020)</div>
+            <div class="opp-item">Red hídrica densa con gran variabilidad orográfica</div>
+            <div class="opp-item">17 grupos de investigación en sector agua</div>
+            <div class="opp-item">Sistema SIMAC de monitoreo hidrometeorológico</div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:600;color:var(--naranja);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">Barreras</div>
+          <div class="nodo-barriers">
+            <div class="barrier-item">Pérdida de 42.700 ha cobertura arbórea desde 2000 (15.9 Mt CO₂)</div>
+            <div class="barrier-item">Baja calidad del agua por vertimientos domésticos e industriales</div>
+            <div class="barrier-item">Brecha urbano-rural en acceso y gestión del recurso hídrico</div>
+            <div class="barrier-item">Desarticulación política pública y gestión del riesgo</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nodo-card n3">
+      <div class="nodo-header">
+        <div>
+          <div class="nodo-num" style="color:var(--naranja);">Nodo 3 · Misión Emblemática 2</div>
+          <div class="nodo-title">Caldas hacia un Nuevo Modelo Productivo, Sostenible y Equitativo</div>
+        </div>
+      </div>
+      <div class="nodo-desc">Identificar motores de productividad, sostenibilidad y competitividad para Caldas bajo principios de economía circular. Sectores estratégicos: agro-agroindustria, manufactura inteligente, industria 4.0 y gestión energética.</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px;">
+        <div>
+          <div style="font-size:12px;font-weight:600;color:var(--naranja);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">Oportunidades</div>
+          <div class="nodo-opps">
+            <div class="opp-item">Modelos económicos de articulación conocimiento-actividades productivas</div>
+            <div class="opp-item">Políticas para mayor eficiencia energética en diseño</div>
+            <div class="opp-item">Consolidación modelo telemedicina en municipios</div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:12px;font-weight:600;color:var(--naranja);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">Barreras</div>
+          <div class="nodo-barriers">
+            <div class="barrier-item">NBI del 8.9% · solo 5 municipios por debajo del promedio</div>
+            <div class="barrier-item">Brechas educativas, comerciales y tecnológicas manufactura</div>
+            <div class="barrier-item">Baja eficiencia energética (peor indicador IDC)</div>
+            <div class="barrier-item">Déficit conectividad internet zona rural</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="nodo-card n4">
+      <div class="nodo-header">
+        <div>
+          <div class="nodo-num" style="color:var(--dorado);">Nodo 4 · Misión Emblemática 3</div>
+          <div class="nodo-title">Conocimiento e Innovación para la Equidad</div>
+        </div>
+      </div>
+      <div class="nodo-desc">Comprensión transversal del conocimiento (ciencia, saberes, artes, humanidades) para construir alternativas que promuevan equidad. Principios: innovación social, ciclo de vida, perspectiva sistémica e interseccionalidad.</div>
+      <div class="nodo-barriers" style="margin-top:10px;">
+        <div class="barrier-item">Bajas capacidades socioemocionales para participación ciudadana</div>
+        <div class="barrier-item">Débiles mecanismos de gestión participativa del conocimiento</div>
+        <div class="barrier-item">Falta de intervención en enfermedades cardiovasculares, nutrición y salud mental</div>
+        <div class="barrier-item">Desconocimiento cultural de la propia riqueza regional en los territorios</div>
+      </div>
+    </div>
+
+    <div class="nodo-card n5">
+      <div class="nodo-header">
+        <div>
+          <div class="nodo-num" style="color:var(--tierra);">Nodo 5 · Misión Emblemática 3</div>
+          <div class="nodo-title">Educar con Calidad para el Crecimiento, la Equidad y el Desarrollo Humano</div>
+        </div>
+      </div>
+      <div class="nodo-desc">Caldas como gran hábitat educativo. Tres hábitats de aprendizaje: (1) Primera infancia y educación básica; (2) Educación media, técnica y superior para trabajo digno; (3) Formación para la vida y desarrollo de alto nivel.</div>
+      <div class="nodo-barriers" style="margin-top:10px;">
+        <div class="barrier-item">Desarticulación entre actores y sectores educativos</div>
+        <div class="barrier-item">Brechas de calidad educativa urbano/rural (básica y media)</div>
+        <div class="barrier-item">Baja conectividad e infraestructura escolar rural</div>
+        <div class="barrier-item">Educación no territorializada que privilegia contenidos sobre desarrollo humano</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======= SECTION 4: POLÍTICA PÚBLICA ======= -->
+  <div id="politica" class="section">
+    <h2 class="section-heading">Política Pública CTeI — Ordenanza 952 & Lineamientos</h2>
+    <p class="section-subheading">Marco de política construido a partir de la Misión de Sabios por Caldas 2020-2021, el CONPES 4069 y el Plan de Desarrollo Departamental "Unidos es Posible" 2020-2023. Aprobado mediante Ordenanza 952 de la Asamblea de Caldas.</p>
+
+    <div class="context-band">
+      <div class="context-item">
+        <h4>Objetivo General</h4>
+        <p>Consolidar la equidad, competitividad y sostenibilidad del departamento de Caldas a partir del conocimiento, la educación, la tecnología y la Innovación.</p>
+      </div>
+      <div class="context-item">
+        <h4>Objetivos Específicos</h4>
+        <p>① Posicionar a Caldas como territorio biointeligente y sostenible. ② Implementar modelo productivo en economía circular. ③ Reducir brechas sociales, económicas, políticas y culturales a partir de CTeI.</p>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="panel">
+        <div class="panel-title"><span class="icon">🏛</span>Marco Normativo CTeI</div>
+        <p class="panel-sub">Principales instrumentos legales que soportan la política</p>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-year">1991</div>
+            <div class="timeline-text">Constitución Política · Arts. 67, 69, 70, 71 — educación y ciencia como derechos fundamentales y deberes del Estado.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2009</div>
+            <div class="timeline-text">Ley 1286 CTeI · Fortalecimiento SNCTI. CONPES 3582 — capacidad nacional en conocimiento.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2011</div>
+            <div class="timeline-text">CONPES 3697 — Biotecnología y bioprospección. Decreto 0486 — creación CODECTI Caldas.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2018</div>
+            <div class="timeline-text">CONPES 3934 — Crecimiento verde 2030. Definición bioeconomía como hoja de ruta nacional.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2020</div>
+            <div class="timeline-text">Ordenanza 875 — Plan Departamental "Unidos es Posible" 2020-2023. Programa CTeI al Servicio de la Competitividad.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2021–22</div>
+            <div class="timeline-text">Ley 2162 — MinCiencias como ente rector. CONPES 4069 — PNCTeI 2022-2031 con enfoque misional.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2022</div>
+            <div class="timeline-text"><strong>Ordenanza 952</strong> — Política Pública de CTeI del Departamento de Caldas. 15 lineamientos, 3 misiones emblemáticas.</div>
+          </div>
+        </div>
+      </div>
+      <div class="panel">
+        <div class="panel-title"><span class="icon">🎯</span>Modelo Conceptual — Políticas por Misión</div>
+        <p class="panel-sub">Marco III de Mazzucato: Innovación Transformativa como base de la política caldense</p>
+        <div style="overflow-x:auto;">
+          <table class="indicador-table">
+            <thead>
+              <tr>
+                <th>Aspecto</th>
+                <th>Marco Lógico</th>
+                <th>Misional (Caldas)</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>Objetivos</td><td>Crecimiento / Competitividad</td><td>Sostenibilidad</td></tr>
+              <tr><td>Motivación</td><td>Fallas de mercado</td><td>Generación valor público</td></tr>
+              <tr><td>Rol del Estado</td><td>Proveedor / Catalizador</td><td>Activo y emprendedor</td></tr>
+              <tr><td>Abordaje</td><td>I+D / Triple hélice</td><td>Nichos tecnológicos / Misiones</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="margin-top:16px;">
+          <div class="panel-title" style="font-size:14px;margin-bottom:10px;"><span class="icon">⚙</span>4 Demandas Territoriales Priorizadas</div>
+          <div class="demanda-card" style="margin-bottom:10px;">
+            <div class="demanda-num">D1</div>
+            <div>
+              <div class="demanda-title">CTeI para modelo bioeconómico</div>
+              <div class="demanda-desc">Transformación productiva, sostenibilidad y adaptación al cambio climático mediante biotecnología y tecnologías avanzadas.</div>
+            </div>
+          </div>
+          <div class="demanda-card" style="margin-bottom:10px;">
+            <div class="demanda-num">D2</div>
+            <div>
+              <div class="demanda-title">CTeI para valor en bioproductos</div>
+              <div class="demanda-desc">Bioprospección y biotecnología para agroindustria, farmacéutica, cosmecéutica y nutracéutica.</div>
+            </div>
+          </div>
+          <div class="demanda-card" style="margin-bottom:10px;">
+            <div class="demanda-num">D3</div>
+            <div>
+              <div class="demanda-title">CTeI para biocomercio sostenible</div>
+              <div class="demanda-desc">Negocios verdes, estrategia origen Caldas e iniciativas OVOP para especialización inteligente del territorio.</div>
+            </div>
+          </div>
+          <div class="demanda-card" style="margin-bottom:0;">
+            <div class="demanda-num">D4</div>
+            <div>
+              <div class="demanda-title">CTeI para ordenamiento ambiental</div>
+              <div class="demanda-desc">Ordenamiento social y productivo en escalas apropiadas según particularidades geográficas y ecosistémicas.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title"><span class="icon">📊</span>Distribución Lineamientos por Misión Emblemática</div>
+      <p class="panel-sub">15 lineamientos estratégicos distribuidos en 3 misiones emblemáticas y 5 nodos temáticos</p>
+      <div class="chart-wrap">
+        <canvas id="chartLineamientos"></canvas>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======= SECTION 5: LINEAMIENTOS ======= -->
+  <div id="lineamientos" class="section">
+    <h2 class="section-heading">15 Lineamientos de Política CTeI</h2>
+    <p class="section-subheading">Lineamientos estratégicos distribuidos por Misión Emblemática y Nodo, con objetivos y actividades priorizadas para el desarrollo de CTeI en Caldas.</p>
+
+    <div class="me-card" style="margin-bottom:20px;">
+      <div class="me-num">Misión Emblemática 1</div>
+      <div class="me-title">Caldas Territorio Biointeligente y Sostenible · Nodo 1 & 2</div>
+      <div class="me-nodos">
+        <span class="me-nodo-tag">L-1: Sistemas Productivos Ecoeficientes</span>
+        <span class="me-nodo-tag">L-2: Bioeconomía Sostenible</span>
+        <span class="me-nodo-tag">L-3: Economía Creativa</span>
+        <span class="me-nodo-tag">L-4: Especialización Inteligente</span>
+        <span class="me-nodo-tag">L-5: Servicios Ecosistémicos</span>
+        <span class="me-nodo-tag">L-6: Riesgo & Clima</span>
+      </div>
+    </div>
+
+    <div class="lin-card" style="background:white;border-left-color:var(--verde-hoja);">
+      <div class="lin-code">L-1 · Nodo 1 · ME1</div>
+      <div class="lin-title">Desarrollo de Sistemas Productivos Ecoeficientes</div>
+      <div class="lin-obj">Desarrollar conocimiento, transferencia tecnológica e innovación para implementar modelos de agroecología, producción pecuaria sostenible y ecoeficiente, y minería e industria responsable adaptados a Caldas.</div>
+      <div class="lin-actions">
+        <span class="lin-action-tag">Plataforma interoperable datos agropecuarios</span>
+        <span class="lin-action-tag">Modelos agroecología precisión 4.0</span>
+        <span class="lin-action-tag">Centros desarrollo biotecnológico</span>
+        <span class="lin-action-tag">Tecnologías convergentes para alimentos</span>
+      </div>
+    </div>
+
+    <div class="lin-card" style="background:white;border-left-color:var(--verde-claro);">
+      <div class="lin-code">L-2 · Nodo 1 · ME1</div>
+      <div class="lin-title">Bioeconomía para el Desarrollo Sostenible</div>
+      <div class="lin-obj">Promover y consolidar el uso de la bioeconomía sostenible como motor de desarrollo en Caldas tomando como eje estratégico la biotecnología y el uso de la biodiversidad nativa.</div>
+      <div class="lin-actions">
+        <span class="lin-action-tag">Observatorio de Bioeconomía Departamental</span>
+        <span class="lin-action-tag">Caracterización genómica especies endémicas</span>
+        <span class="lin-action-tag">Bioproductos de biodiversidad nativa</span>
+        <span class="lin-action-tag">Plataforma hub de datos biológicos</span>
+        <span class="lin-action-tag">Nuevos antibióticos/antimicóticos biológicos</span>
+      </div>
+    </div>
+
+    <div class="lin-card" style="background:white;border-left-color:var(--dorado);">
+      <div class="lin-code">L-3 · Nodo 1 · ME1</div>
+      <div class="lin-title">Gestión de Información para el Desarrollo de la Economía Creativa</div>
+      <div class="lin-obj">Promover el pensamiento creativo en CTeI como insumo fundamental en la creación y fortalecimiento de los ecosistemas creativos de innovación tecnológica del departamento.</div>
+      <div class="lin-actions">
+        <span class="lin-action-tag">Formación capacidades creativas innovación</span>
+        <span class="lin-action-tag">Plataforma datos economía creativa Caldas</span>
+        <span class="lin-action-tag">Áreas de Desarrollo Naranja (ADN)</span>
+        <span class="lin-action-tag">Start-ups economía creativa</span>
+      </div>
+    </div>
+
+    <div class="lin-card" style="background:white;border-left-color:var(--naranja);">
+      <div class="lin-code">L-4 · Nodo 1 · ME1</div>
+      <div class="lin-title">Plataformas para Especialización Inteligente Municipal</div>
+      <div class="lin-obj">Impulsar la especialización inteligente de los municipios de Caldas a partir de sus vocaciones y el aprovechamiento sostenible de su diversidad natural y cultural. Estrategia OVOP (One Village One Product).</div>
+      <div class="lin-actions">
+        <span class="lin-action-tag">Desarrollos locales OVOP</span>
+        <span class="lin-action-tag">Plataforma biodiversidad municipal</span>
+        <span class="lin-action-tag">SIG expresiones culturales Caldas</span>
+        <span class="lin-action-tag">Inventario bienes interés cultural</span>
+      </div>
+    </div>
+
+    <div class="lin-card" style="background:white;border-left-color:var(--azul-agua);">
+      <div class="lin-code">L-5 · Nodo 2 · ME1</div>
+      <div class="lin-title">Desarrollo de Servicios Ecosistémicos</div>
+      <div class="lin-obj">Promover la conservación de los servicios ecosistémicos del territorio caldense mediante redes de conocimiento y mecanismos de pago por servicios ambientales.</div>
+      <div class="lin-actions">
+        <span class="lin-action-tag">Potenciar PTAR modulares</span>
+        <span class="lin-action-tag">Valoración económica servicios ambientales</span>
+        <span class="lin-action-tag">Pago servicios ecosistémicos</span>
+      </div>
+    </div>
+
+    <div class="lin-card" style="background:white;border-left-color:var(--azul-agua);">
+      <div class="lin-code">L-6 · Nodo 2 · ME1</div>
+      <div class="lin-title">Gestión del Riesgo y el Cambio Climático</div>
+      <div class="lin-obj">Fortalecer conocimiento técnico-científico sobre riesgo y cambio climático para toma de decisiones en el Departamento de Caldas.</div>
+      <div class="lin-actions">
+        <span class="lin-action-tag">Redes conocimiento evaluación riesgos</span>
+        <span class="lin-action-tag">Sistema información gestión riesgo</span>
+        <span class="lin-action-tag">Educación gestión riesgo y clima</span>
+        <span class="lin-action-tag">Diálogo saberes comunidades étnicas</span>
+      </div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="me-card me2" style="margin-bottom:20px;">
+      <div class="me-num">Misión Emblemática 2</div>
+      <div class="me-title">Nuevo Modelo Productivo, Sostenible y Equitativo · Nodo 3</div>
+      <div class="me-nodos">
+        <span class="me-nodo-tag">L-7: Tenencia Tierra</span>
+        <span class="me-nodo-tag">L-8: Manufactura Inteligente</span>
+        <span class="me-nodo-tag">L-9: Sofisticación Productiva</span>
+        <span class="me-nodo-tag">L-10: Economía Circular & Energía</span>
+      </div>
+    </div>
+
+    <div class="lin-card" style="background:white;">
+      <div class="lin-code">L-7 · Nodo 3 · ME2</div>
+      <div class="lin-title">Tenencia y Gestión de la Tierra</div>
+      <div class="lin-obj">Identificar problemáticas de la ruralidad para promover acciones en torno a tenencia y gestión de tierra. Casa Municipal en Tenencia de Tierra, plan pedagógico gestores digitales rurales.</div>
+    </div>
+
+    <div class="lin-card" style="background:white;">
+      <div class="lin-code">L-8 · Nodo 3 · ME2</div>
+      <div class="lin-title">Manufactura Inteligente Caldense</div>
+      <div class="lin-obj">Fortalecer capacidades tecnológicas orientando inversión pública y privada para mejoramiento de recursos tecnológicos aplicados a la productividad industrial. Observatorio de Productividad Caldense.</div>
+    </div>
+
+    <div class="lin-card" style="background:white;">
+      <div class="lin-code">L-9 · Nodo 3 · ME2</div>
+      <div class="lin-title">Apropiación y Adopción de Conocimiento para Sofisticación Productiva</div>
+      <div class="lin-obj">Promover diálogo de saberes mediante infraestructura de datos, redes, espacios de interacción y alianzas para transferencia de conocimiento entre academia, empresa y territorio.</div>
+    </div>
+
+    <div class="lin-card" style="background:white;">
+      <div class="lin-code">L-10 · Nodo 3 · ME2</div>
+      <div class="lin-title">Pacto por la Economía Circular y la Gestión Energética</div>
+      <div class="lin-obj">Unir esfuerzos público-privados hacia nuevos modelos productivos, sostenibles y energéticamente eficientes. Pacto Economía Circular + Pacto Gestión Energética departamental.</div>
+    </div>
+
+    <div class="divider"></div>
+
+    <div class="me-card me3" style="margin-bottom:20px;">
+      <div class="me-num">Misión Emblemática 3</div>
+      <div class="me-title">Caldas Educada, Saludable, Científica e Innovadora · Nodos 4 & 5</div>
+      <div class="me-nodos">
+        <span class="me-nodo-tag">L-11: Brechas Digitales</span>
+        <span class="me-nodo-tag">L-12: Salud CTeI</span>
+        <span class="me-nodo-tag">L-13: Entorno Social</span>
+        <span class="me-nodo-tag">L-14: Educación Transformadora</span>
+      </div>
+    </div>
+
+    <div class="lin-card" style="background:white;">
+      <div class="lin-code">L-11 · Nodo 4 · ME3</div>
+      <div class="lin-title">Gestión de Tecnologías para Reducir Brechas Digitales</div>
+      <div class="lin-obj">Garantizar desarrollo equitativo de subregiones mediante TIC. Plan competencias digitales, soluciones tecnologías emergentes en subregiones.</div>
+    </div>
+
+    <div class="lin-card" style="background:white;">
+      <div class="lin-code">L-12 · Nodo 4 · ME3</div>
+      <div class="lin-title">Hacia un Modelo de Salud Basado en CTeI</div>
+      <div class="lin-obj">Mejorar condiciones de salud mediante generación de conocimiento en ciencias biomédicas e innovación en atención primaria. Centro de Investigación en Medicina Traslacional.</div>
+    </div>
+
+    <div class="lin-card" style="background:white;">
+      <div class="lin-code">L-13 · Nodo 4 · ME3</div>
+      <div class="lin-title">Condiciones del Entorno para Transformación Social y Productiva</div>
+      <div class="lin-obj">Cerrar brechas sociales, económicas, políticas y culturales mediante CTeI participativa y descentralizada. 6 comités subregionales, plataforma datos científicos abiertos, innovación social.</div>
+    </div>
+
+    <div class="lin-card" style="background:white;">
+      <div class="lin-code">L-14 · Nodo 5 · ME3</div>
+      <div class="lin-title">Pacto por una Educación para la Transformación Social y Productiva</div>
+      <div class="lin-obj">Desarrollar un Pacto por la educación basado en acuerdos sociales, particularidades territoriales y la educación como estrategia de cierre de brechas. Tres hábitats educativos para Caldas.</div>
+    </div>
+  </div>
+
+  <!-- ======= SECTION 6: PLAN DE ACCIÓN ======= -->
+  <div id="plan" class="section">
+    <h2 class="section-heading">Plan de Acción — Tiempos y Responsables</h2>
+    <p class="section-subheading">Cronograma por plazos (corto 1-3 años, mediano 3-5 años, largo 5-10 años) y secretarías líderes para los principales productos de la política CTeI de Caldas.</p>
+
+    <div class="panel" style="margin-bottom:20px;">
+      <div class="panel-title"><span class="icon">⏱</span>Distribución de Acciones por Plazo y Lineamiento</div>
+      <p class="panel-sub">Número de acciones estratégicas por horizonte temporal</p>
+      <div class="chart-wrap">
+        <canvas id="chartPlazos"></canvas>
+      </div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title"><span class="icon">📋</span>Principales Productos y Responsables</div>
+      <p class="panel-sub">Extracto del Anexo 1 del documento de lineamientos de política CTeI — productos priorizados por misión emblemática</p>
+      <div style="overflow-x:auto;margin-top:8px;">
+        <table class="indicador-table">
+          <thead>
+            <tr>
+              <th>ME</th>
+              <th>Lineamiento</th>
+              <th>Producto estratégico</th>
+              <th>Quién lidera</th>
+              <th>Plazo</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>M1</td>
+              <td>L-1: Ecoeficiencia</td>
+              <td>Plataforma interoperable datos agropecuarios</td>
+              <td>Secretaría de Agricultura</td>
+              <td><span class="badge-tipo badge-cp">Corto</span></td>
+            </tr>
+            <tr>
+              <td>M1</td>
+              <td>L-1: Ecoeficiencia</td>
+              <td>Modelos agroecología y producción pecuaria sostenible</td>
+              <td>Sec. Agricultura</td>
+              <td><span class="badge-tipo badge-mp">Mediano</span></td>
+            </tr>
+            <tr>
+              <td>M1</td>
+              <td>L-1: Ecoeficiencia</td>
+              <td>Fortalecer centros de desarrollo como incubadores biotecnológicos</td>
+              <td>Sec. Desarrollo e Innovación</td>
+              <td><span class="badge-tipo badge-mp">Mediano</span></td>
+            </tr>
+            <tr>
+              <td>M1</td>
+              <td>L-2: Bioeconomía</td>
+              <td>Observatorio de Bioeconomía Departamental</td>
+              <td>Sec. Medio Ambiente + Sec. Desarrollo</td>
+              <td><span class="badge-tipo badge-cp">Corto</span></td>
+            </tr>
+            <tr>
+              <td>M1</td>
+              <td>L-2: Bioeconomía</td>
+              <td>Diagnóstico Bosque Seco Tropical (BST) en Caldas</td>
+              <td>Sec. Medio Ambiente</td>
+              <td><span class="badge-tipo badge-cp">Corto</span></td>
+            </tr>
+            <tr>
+              <td>M1</td>
+              <td>L-2: Bioeconomía</td>
+              <td>Caracterización genómica especies endémicas y nativas</td>
+              <td>Sec. Desarrollo + Sec. Salud</td>
+              <td><span class="badge-tipo badge-mp">Mediano</span></td>
+            </tr>
+            <tr>
+              <td>M1</td>
+              <td>L-2: Bioeconomía</td>
+              <td>Nuevos bioproductos agroindustriales, farmacéuticos y cosméticos</td>
+              <td>Sec. Agricultura + Sec. Desarrollo</td>
+              <td><span class="badge-tipo badge-lp">Largo</span></td>
+            </tr>
+            <tr>
+              <td>M1</td>
+              <td>L-3: E. Creativa</td>
+              <td>Programa formación capacidades creativas para innovación</td>
+              <td>Sec. Desarrollo + Sec. Cultura</td>
+              <td><span class="badge-tipo badge-cp">Corto</span></td>
+            </tr>
+            <tr>
+              <td>M1</td>
+              <td>L-3: E. Creativa</td>
+              <td>Plataforma datos economía creativa de Caldas</td>
+              <td>Sec. Desarrollo + Sec. Cultura</td>
+              <td><span class="badge-tipo badge-mp">Mediano</span></td>
+            </tr>
+            <tr>
+              <td>M1</td>
+              <td>L-4: Especialización</td>
+              <td>Estrategia OVOP por municipio / vocación territorial</td>
+              <td>Sec. Cultura + Sec. Agricultura</td>
+              <td><span class="badge-tipo badge-cp">Corto</span></td>
+            </tr>
+            <tr>
+              <td>M1</td>
+              <td>L-4: Especialización</td>
+              <td>SIG expresiones y prácticas culturales de Caldas</td>
+              <td>Sec. Cultura</td>
+              <td><span class="badge-tipo badge-mp">Mediano</span></td>
+            </tr>
+            <tr>
+              <td>M1</td>
+              <td>L-5: Ecosistemas</td>
+              <td>Red PTAR modulares con tecnología progresiva</td>
+              <td>Sec. Vivienda — Plan Depto. Aguas</td>
+              <td><span class="badge-tipo badge-mp">Mediano</span></td>
+            </tr>
+            <tr>
+              <td>M1</td>
+              <td>L-6: Riesgo</td>
+              <td>Redes de gestión del conocimiento de riesgos de desastre</td>
+              <td>Sec. Medio Ambiente</td>
+              <td><span class="badge-tipo badge-cp">Corto</span></td>
+            </tr>
+            <tr>
+              <td>M2</td>
+              <td>L-7: Tierra</td>
+              <td>Casa Municipal en Tenencia y Gestión de la Tierra</td>
+              <td>Sec. Agricultura</td>
+              <td><span class="badge-tipo badge-mp">Mediano</span></td>
+            </tr>
+            <tr>
+              <td>M2</td>
+              <td>L-8: Manufactura</td>
+              <td>Observatorio de Productividad Caldense</td>
+              <td>Sec. Desarrollo e Innovación</td>
+              <td><span class="badge-tipo badge-cp">Corto</span></td>
+            </tr>
+            <tr>
+              <td>M2</td>
+              <td>L-10: E. Circular</td>
+              <td>Pacto por la Economía Circular en Caldas</td>
+              <td>Sec. Medio Ambiente + Sec. Desarrollo</td>
+              <td><span class="badge-tipo badge-lp">Largo</span></td>
+            </tr>
+            <tr>
+              <td>M3</td>
+              <td>L-12: Salud</td>
+              <td>Centro de Investigación en Medicina Traslacional</td>
+              <td>Sec. Salud</td>
+              <td><span class="badge-tipo badge-lp">Largo</span></td>
+            </tr>
+            <tr>
+              <td>M3</td>
+              <td>L-13: Entorno</td>
+              <td>6 comités subregionales de CTeI descentralizados</td>
+              <td>CODECTI + Sec. Desarrollo</td>
+              <td><span class="badge-tipo badge-cp">Corto</span></td>
+            </tr>
+            <tr>
+              <td>M3</td>
+              <td>L-13: Entorno</td>
+              <td>Plataforma abierta de datos científicos (gobierno en línea)</td>
+              <td>Sec. Desarrollo e Innovación</td>
+              <td><span class="badge-tipo badge-mp">Mediano</span></td>
+            </tr>
+            <tr>
+              <td>M3</td>
+              <td>L-14: Educación</td>
+              <td>Pacto por la Educación — acuerdo social territorial</td>
+              <td>Sec. Educación + Sec. Desarrollo</td>
+              <td><span class="badge-tipo badge-lp">Largo</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======= SECTION 7: PROYECTOS PRIORIZADOS ======= -->
+  <div id="proyectos" class="section">
+    <h2 class="section-heading">Proyectos Priorizados en la Política CTeI de Caldas</h2>
+    <p class="section-subheading">Portafolio de proyectos estratégicos identificados y priorizados en el marco de la Misión de Sabios por Caldas 2020-2021 y el Plan de Acción de la Política Pública de CTeI (Ordenanza 952). Organizados por área temática y horizonte temporal.</p>
+
+    <!-- FILTER BAR -->
+    <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:24px;align-items:center;">
+      <span style="font-size:12px;font-weight:600;color:var(--gris-suave);text-transform:uppercase;letter-spacing:0.5px;">Filtrar por área:</span>
+      <button class="proy-filter active" data-filter="all">Todos</button>
+      <button class="proy-filter" data-filter="bioeconomia">🌿 Bioeconomía</button>
+      <button class="proy-filter" data-filter="creatividad">🎨 Economía Creativa</button>
+      <button class="proy-filter" data-filter="datos">💻 Datos & Tecnología</button>
+      <button class="proy-filter" data-filter="agua">💧 Agua & Ambiente</button>
+      <button class="proy-filter" data-filter="productivo">🏭 Modelo Productivo</button>
+      <button class="proy-filter" data-filter="social">🤝 Equidad & Educación</button>
+    </div>
+
+    <style>
+      .proy-filter {
+        font-size: 12px; font-weight: 600; padding: 6px 14px;
+        border-radius: 20px; border: 1.5px solid var(--gris-linea);
+        background: var(--blanco); color: var(--gris-suave); cursor: pointer;
+        transition: all .18s; font-family: 'DM Sans', sans-serif;
+      }
+      .proy-filter:hover, .proy-filter.active {
+        background: var(--verde-selva); color: white; border-color: var(--verde-selva);
+      }
+      .proy-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 18px; }
+      .proy-card {
+        background: var(--blanco); border-radius: 14px;
+        box-shadow: 0 2px 8px var(--sombra);
+        overflow: hidden; display: flex; flex-direction: column;
+        transition: transform .15s, box-shadow .15s;
+      }
+      .proy-card:hover { transform: translateY(-3px); box-shadow: 0 6px 18px var(--sombra-fuerte); }
+      .proy-card[data-visible="false"] { display: none; }
+      .proy-header {
+        padding: 18px 20px 14px;
+        border-bottom: 1px solid var(--gris-linea);
+        display: flex; gap: 12px; align-items: flex-start;
+      }
+      .proy-ico {
+        width: 42px; height: 42px; border-radius: 10px;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 20px; flex-shrink: 0;
+      }
+      .proy-ico.bioeconomia { background: rgba(45,106,79,0.1); }
+      .proy-ico.creatividad  { background: rgba(201,162,39,0.1); }
+      .proy-ico.datos        { background: rgba(0,119,182,0.1); }
+      .proy-ico.agua         { background: rgba(0,119,182,0.08); }
+      .proy-ico.productivo   { background: rgba(231,111,81,0.1); }
+      .proy-ico.social       { background: rgba(139,94,60,0.1); }
+      .proy-name { font-size: 14px; font-weight: 700; color: var(--gris-texto); line-height: 1.35; }
+      .proy-lin  { font-size: 11px; color: var(--gris-suave); margin-top: 3px; font-weight: 500; }
+      .proy-body { padding: 14px 20px 16px; flex: 1; display: flex; flex-direction: column; gap: 10px; }
+      .proy-desc { font-size: 12.5px; color: var(--gris-suave); line-height: 1.65; flex: 1; }
+      .proy-meta { display: flex; flex-wrap: wrap; gap: 6px; }
+      .proy-badge {
+        font-size: 10.5px; font-weight: 600; padding: 3px 9px; border-radius: 10px;
+        text-transform: uppercase; letter-spacing: 0.4px;
+      }
+      .proy-badge.cp  { background: rgba(82,183,136,0.15); color: #1a6640; }
+      .proy-badge.mp  { background: rgba(201,162,39,0.15); color: #7a5c00; }
+      .proy-badge.lp  { background: rgba(139,94,60,0.15); color: #5c3010; }
+      .proy-badge.me1 { background: rgba(26,71,49,0.1); color: var(--verde-selva); }
+      .proy-badge.me2 { background: rgba(0,60,110,0.08); color: #003c6e; }
+      .proy-badge.me3 { background: rgba(139,94,60,0.1); color: var(--tierra); }
+      .proy-responsible { font-size: 11px; color: var(--gris-suave); display: flex; gap: 5px; align-items: center; }
+      .proy-responsible::before { content:'👤'; font-size:11px; }
+      .proy-acciones { display: flex; flex-direction: column; gap: 4px; margin-top: 2px; }
+      .proy-accion {
+        display: flex; gap: 7px; font-size: 11.5px; color: var(--gris-texto);
+        line-height: 1.5; align-items: flex-start;
+      }
+      .proy-accion::before { content:'›'; color: var(--verde-hoja); font-weight: 700; flex-shrink:0; margin-top:1px; }
+    </style>
+
+    <div class="proy-grid" id="proyGrid">
+
+      <!-- ===== BIOECONOMÍA ===== -->
+      <div class="proy-card" data-cat="bioeconomia">
+        <div class="proy-header">
+          <div class="proy-ico bioeconomia">🔭</div>
+          <div>
+            <div class="proy-name">Observatorio de Bioeconomía Departamental de Caldas</div>
+            <div class="proy-lin">L-2 · Nodo 1 · ME1</div>
+          </div>
+        </div>
+        <div class="proy-body">
+          <div class="proy-desc">Plataforma de vigilancia, análisis y transferencia del conocimiento en biodiversidad, biocomercio y bioproductos. Conecta información científica, empresarial y de política pública desde Caldas para el mundo.</div>
+          <div class="proy-acciones">
+            <div class="proy-accion">Diagnosticar detalladamente el Bosque Seco Tropical (BST) de Caldas</div>
+            <div class="proy-accion">Generar conocimiento integral sobre biodiversidad y potencialidades</div>
+            <div class="proy-accion">Conectar con el Observatorio Nacional de Biocomercio (OBIO)</div>
+          </div>
+          <div class="proy-meta">
+            <span class="proy-badge cp">Corto plazo</span>
+            <span class="proy-badge me1">ME 1</span>
+          </div>
+          <div class="proy-responsible">Sec. Medio Ambiente + Sec. Desarrollo, Empleo e Innovación</div>
+        </div>
+      </div>
+
+      <div class="proy-card" data-cat="bioeconomia">
+        <div class="proy-header">
+          <div class="proy-ico bioeconomia">🧬</div>
+          <div>
+            <div class="proy-name">Programa de Caracterización Genómica de Especies Nativas y Endémicas</div>
+            <div class="proy-lin">L-2 · Nodo 1 · ME1</div>
+          </div>
+        </div>
+        <div class="proy-body">
+          <div class="proy-desc">Caracterización genómica de la biodiversidad nativa de Caldas para fines de conservación, uso sostenible y desarrollo de mercados de bioproductos farmacéuticos, cosméticos y agroalimentarios.</div>
+          <div class="proy-acciones">
+            <div class="proy-accion">Acelerar descubrimiento de antibióticos, antimicóticos y antivirales de origen biológico mediante ómicas e IA</div>
+            <div class="proy-accion">Fortalecer capacidades del Centro BIOS como incubador biotecnológico</div>
+            <div class="proy-accion">Mejorar condiciones de acceso a recursos genéticos vía bioprospección</div>
+          </div>
+          <div class="proy-meta">
+            <span class="proy-badge mp">Mediano plazo</span>
+            <span class="proy-badge me1">ME 1</span>
+          </div>
+          <div class="proy-responsible">Sec. Desarrollo, Empleo e Innovación + Sec. Salud</div>
+        </div>
+      </div>
+
+      <div class="proy-card" data-cat="bioeconomia">
+        <div class="proy-header">
+          <div class="proy-ico bioeconomia">🌱</div>
+          <div>
+            <div class="proy-name">Plataforma Interoperable de Datos Agropecuarios e Industriales</div>
+            <div class="proy-lin">L-1 · Nodo 1 · ME1</div>
+          </div>
+        </div>
+        <div class="proy-body">
+          <div class="proy-desc">Sistema que acopie bases de datos agropecuarias, agroindustriales, mineras e industriales del departamento con información actualizada, segura y de calidad para la toma de decisiones territoriales basadas en datos.</div>
+          <div class="proy-acciones">
+            <div class="proy-accion">Actualizar censos e información departamental de producción agropecuaria</div>
+            <div class="proy-accion">Diseñar modelos de uso/gestión del suelo con tecnologías 4.0 (IA, IoT, blockchain)</div>
+            <div class="proy-accion">Diseñar modelos de uso y gestión del agua en el territorio</div>
+          </div>
+          <div class="proy-meta">
+            <span class="proy-badge cp">Corto plazo</span>
+            <span class="proy-badge me1">ME 1</span>
+          </div>
+          <div class="proy-responsible">Sec. Desarrollo, Empleo e Innovación (Unidad de Minas)</div>
+        </div>
+      </div>
+
+      <div class="proy-card" data-cat="bioeconomia">
+        <div class="proy-header">
+          <div class="proy-ico bioeconomia">🌿</div>
+          <div>
+            <div class="proy-name">Estrategia Origen Caldas — Marca Territorial</div>
+            <div class="proy-lin">L-4 · Demanda 3 · ME1</div>
+          </div>
+        </div>
+        <div class="proy-body">
+          <div class="proy-desc">Estrategia para dinamizar la comercialización de productos agropecuarios y agroindustriales de Caldas, resaltando la procedencia, el saber cultural, la naturalidad, calidad, inocuidad e innovación territorial.</div>
+          <div class="proy-acciones">
+            <div class="proy-accion">Capacitar asociaciones de productores y emprendedores agroindustriales en requisitos de la estrategia</div>
+            <div class="proy-accion">Integrar el valor agregado de bioeconomía y economía creativa al "Plan Origen Caldas"</div>
+            <div class="proy-accion">Posicionar productos en mercados nacionales e internacionales</div>
+          </div>
+          <div class="proy-meta">
+            <span class="proy-badge cp">Corto plazo</span>
+            <span class="proy-badge lp">+ Largo plazo</span>
+            <span class="proy-badge me1">ME 1</span>
+          </div>
+          <div class="proy-responsible">Sec. Cultura + Sec. Agricultura</div>
+        </div>
+      </div>
+
+      <div class="proy-card" data-cat="bioeconomia">
+        <div class="proy-header">
+          <div class="proy-ico bioeconomia">☕</div>
+          <div>
+            <div class="proy-name">Sostenibilidad de Cadenas Productivas Priorizadas</div>
+            <div class="proy-lin">L-1 · Demanda 3 · ME1</div>
+          </div>
+        </div>
+        <div class="proy-body">
+          <div class="proy-desc">Soluciones basadas en la naturaleza para la innovación y sostenibilidad de las cadenas productivas: café, caña panelera, hortofrutícola, plátano, aguacate, cítricos, cacao, caucho, guadua, forestal, agroganadera y piscicultura.</div>
+          <div class="proy-acciones">
+            <div class="proy-accion">Articular SUMA con Centros de Desarrollo Tecnológico y Agroindustrial</div>
+            <div class="proy-accion">Fortalecer capacidades en BPA, BPG, BPM y certificaciones de calidad e inocuidad</div>
+            <div class="proy-accion">Implementar agronomía de precisión con tecnologías 4.0</div>
+          </div>
+          <div class="proy-meta">
+            <span class="proy-badge mp">Mediano plazo</span>
+            <span class="proy-badge me1">ME 1</span>
+          </div>
+          <div class="proy-responsible">Sec. Agricultura + Sec. Desarrollo, Empleo e Innovación</div>
+        </div>
+      </div>
+
+      <div class="proy-card" data-cat="bioeconomia">
+        <div class="proy-header">
+          <div class="proy-ico bioeconomia">🌳</div>
+          <div>
+            <div class="proy-name">Estrategia OVOP — Un Municipio, Un Producto</div>
+            <div class="proy-lin">L-4 · Demanda 3 · ME1</div>
+          </div>
+        </div>
+        <div class="proy-body">
+          <div class="proy-desc">Estrategia de especialización inteligente municipal basada en el trabajo de las comunidades para identificar y desarrollar productos únicos con marca de origen, convirtiéndolas en actoras activas del desarrollo territorial.</div>
+          <div class="proy-acciones">
+            <div class="proy-accion">Promover la estrategia OVOP y formar recurso humano para gestión del desarrollo local</div>
+            <div class="proy-accion">Identificar productos propios de cada zona con potencial exportador</div>
+            <div class="proy-accion">Utilizar sosteniblemente los recursos propios (naturales, económicos, culturales) por municipio</div>
+          </div>
+          <div class="proy-meta">
+            <span class="proy-badge cp">Corto plazo</span>
+            <span class="proy-badge lp">+ Largo plazo</span>
+            <span class="proy-badge me1">ME 1</span>
+          </div>
+          <div class="proy-responsible">Sec. Cultura + Sec. Agricultura</div>
+        </div>
+      </div>
+
+      <!-- ===== ECONOMÍA CREATIVA ===== -->
+      <div class="proy-card" data-cat="creatividad">
+        <div class="proy-header">
+          <div class="proy-ico creatividad">🎨</div>
+          <div>
+            <div class="proy-name">Plataforma de Datos de Economía Creativa de Caldas</div>
+            <div class="proy-lin">L-3 · Nodo 1 · ME1</div>
+          </div>
+        </div>
+        <div class="proy-body">
+          <div class="proy-desc">Sistema interoperable de gestión de información que centralice el mapeo de actores, proyectos, infraestructura, apoyos y acceso a bienes y servicios culturales en los 27 municipios del departamento.</div>
+          <div class="proy-acciones">
+            <div class="proy-accion">Actualizar censos e información departamental de actividades y proyectos culturales</div>
+            <div class="proy-accion">Diseñar y estructurar sistema interoperable de gestión de información cultural</div>
+            <div class="proy-accion">Mapear campos de actuación y actores de la economía creativa por subregión</div>
+          </div>
+          <div class="proy-meta">
+            <span class="proy-badge mp">Mediano plazo</span>
+            <span class="proy-badge me1">ME 1</span>
+          </div>
+          <div class="proy-responsible">Sec. Desarrollo, Empleo e Innovación + Sec. Cultura</div>
+        </div>
+      </div>
+
+      <div class="proy-card" data-cat="creatividad">
+        <div class="proy-header">
+          <div class="proy-ico creatividad">🏙</div>
+          <div>
+            <div class="proy-name">Áreas de Desarrollo Naranja (ADN) en Caldas</div>
+            <div class="proy-lin">L-3 · Nodo 1 · ME1</div>
+          </div>
+        </div>
+        <div class="proy-body">
+          <div class="proy-desc">Creación y gestión de Áreas de Desarrollo Naranja en municipios del departamento como zonas de concentración de industrias culturales y creativas, que actualmente Caldas no tiene, generando ecosistemas creativos de innovación.</div>
+          <div class="proy-acciones">
+            <div class="proy-accion">Crear convocatorias con recursos públicos y privados para fomento de economía creativa</div>
+            <div class="proy-accion">Conformar equipos intersectoriales para gestión de industrias culturales y creativas</div>
+            <div class="proy-accion">Fomentar propiedad intelectual para protección de tangibles e intangibles regionales</div>
+          </div>
+          <div class="proy-meta">
+            <span class="proy-badge mp">Mediano plazo</span>
+            <span class="proy-badge lp">+ Largo plazo</span>
+            <span class="proy-badge me1">ME 1</span>
+          </div>
+          <div class="proy-responsible">Sec. Desarrollo, Empleo e Innovación + Sec. Cultura</div>
+        </div>
+      </div>
+
+      <div class="proy-card" data-cat="creatividad">
+        <div class="proy-header">
+          <div class="proy-ico creatividad">🗺</div>
+          <div>
+            <div class="proy-name">SIG de Expresiones y Prácticas Culturales de Caldas</div>
+            <div class="proy-lin">L-4 · Nodo 1 · ME1</div>
+          </div>
+        </div>
+        <div class="proy-body">
+          <div class="proy-desc">Sistema de Información Geográfico que identifique y cartografíe expresiones y prácticas culturales de las 6 subregiones de Caldas (norte, oriente, sur, occidente, alto occidente y alto oriente) para el aprovechamiento de la diversidad cultural.</div>
+          <div class="proy-acciones">
+            <div class="proy-accion">Construir inventario de bienes de interés cultural del departamento</div>
+            <div class="proy-accion">Realizar mapeos y cartografías de expresiones culturales subregionales</div>
+            <div class="proy-accion">Producir contenidos originales del patrimonio cultural a través de I+C comunitaria</div>
+          </div>
+          <div class="proy-meta">
+            <span class="proy-badge mp">Mediano plazo</span>
+            <span class="proy-badge me1">ME 1</span>
+          </div>
+          <div class="proy-responsible">Sec. Cultura</div>
+        </div>
+      </div>
+
+      <!-- ===== DATOS & TECNOLOGÍA ===== -->
+      <div class="proy-card" data-cat="datos">
+        <div class="proy-header">
+          <div class="proy-ico datos">🔬</div>
+          <div>
+            <div class="proy-name">Hub Departamental de Datos Biológicos</div>
+            <div class="proy-lin">L-2 · Nodo 1 · ME1</div>
+          </div>
+        </div>
+        <div class="proy-body">
+          <div class="proy-desc">Plataforma de datos biológicos departamental interoperable (hub de datos bio) para uso, intercambio, análisis y reutilización como herramienta para la toma de decisiones de política pública, científicas, ambientales y sociales.</div>
+          <div class="proy-acciones">
+            <div class="proy-accion">Fortalecer programas académicos en ciencia de datos, bioinformática/biodatos, IA</div>
+            <div class="proy-accion">Desarrollar herramientas para obtener, almacenar, procesar y analizar datos biológicos</div>
+            <div class="proy-accion">Articular con plataformas nacionales e internacionales de biodiversidad</div>
+          </div>
+          <div class="proy-meta">
+            <span class="proy-badge mp">Mediano plazo</span>
+            <span class="proy-badge me1">ME 1</span>
+          </div>
+          <div class="proy-responsible">Sec. Desarrollo e Innovación + Centro BIOS</div>
+        </div>
+      </div>
+
+      <div class="proy-card" data-cat="datos">
+        <div class="proy-header">
+          <div class="proy-ico datos">🏛</div>
+          <div>
+            <div class="proy-name">Plataforma Abierta de Datos Científicos — Gobierno en Línea CTeI</div>
+            <div class="proy-lin">L-13 · Nodo 4 · ME3</div>
+          </div>
+        </div>
+        <div class="proy-body">
+          <div class="proy-desc">Gobierno en línea para CTeI mediante creación de una plataforma abierta de datos científicos articulada con "momentos de los datos": datos en crudo, enmarcados en sistema de referencia y/o visualización. Incubadoras de datos y startups de datos.</div>
+          <div class="proy-acciones">
+            <div class="proy-accion">Crear 6 comités subregionales y 27 comités municipales de CTeI</div>
+            <div class="proy-accion">Implementar incubadoras de datos en subregiones</div>
+            <div class="proy-accion">Diseñar portal de datos abiertos articulado con la academia y el sector productivo</div>
+          </div>
+          <div class="proy-meta">
+            <span class="proy-badge mp">Mediano plazo</span>
+            <span class="proy-badge me3">ME 3</span>
+          </div>
+          <div class="proy-responsible">CODECTI + Sec. Desarrollo, Empleo e Innovación</div>
+        </div>
+      </div>
+
+      <div class="proy-card" data-cat="datos">
+        <div class="proy-header">
+          <div class="proy-ico datos">📡</div>
+          <div>
+            <div class="proy-name">Observatorio de Productividad Caldense</div>
+            <div class="proy-lin">L-8 · Nodo 3 · ME2</div>
+          </div>
+        </div>
+        <div class="proy-body">
+          <div class="proy-desc">Observatorio para la industria manufacturera de Caldas que produzca reportes semestrales de dinámica de productividad por subsectores, identificando brechas tecnológicas y oportunidades de innovación para la manufactura inteligente.</div>
+          <div class="proy-acciones">
+            <div class="proy-accion">Diseñar y presentar propuesta del observatorio de productividad</div>
+            <div class="proy-accion">Crear reportes semestrales de dinámica de productividad por subsectores</div>
+            <div class="proy-accion">Identificar capacidades tecnológicas a acumular por sector productivo</div>
+          </div>
+          <div class="proy-meta">
+            <span class="proy-badge cp">Corto plazo</span>
+            <span class="proy-badge me2">ME 2</span>
+          </div>
+          <div class="proy-responsible">Sec. Desarrollo, Empleo e Innovación</div>
+        </div>
+      </div>
+
+      <!-- ===== AGUA & AMBIENTE ===== -->
+      <div class="proy-card" data-cat="agua">
+        <div class="proy-header">
+          <div class="proy-ico agua">💧</div>
+          <div>
+            <div class="proy-name">Red de PTAR Modulares con Tecnología Progresiva</div>
+            <div class="proy-lin">L-5 · Nodo 2 · ME1</div>
+          </div>
+        </div>
+        <div class="proy-body">
+          <div class="proy-desc">Potenciar las Plantas de Tratamiento de Aguas Residuales en los municipios de Caldas mediante tecnologías modulares con progresión en objetivos de remoción y reúso, bajo marco de regulación ajustado a niveles internacionales.</div>
+          <div class="proy-acciones">
+            <div class="proy-accion">Seleccionar tecnologías PTAR modulares con objetivos de remoción progresiva</div>
+            <div class="proy-accion">Implementar marco de regulación ajustado a estándares internacionales</div>
+            <div class="proy-accion">Articular con el Plan Departamental de Aguas</div>
+          </div>
+          <div class="proy-meta">
+            <span class="proy-badge mp">Mediano plazo</span>
+            <span class="proy-badge me1">ME 1</span>
+          </div>
+          <div class="proy-responsible">Sec. Vivienda — Plan Departamental de Aguas</div>
+        </div>
+      </div>
+
+      <div class="proy-card" data-cat="agua">
+        <div class="proy-header">
+          <div class="proy-ico agua">🌊</div>
+          <div>
+            <div class="proy-name">Sistema de Información Interoperable de Gestión del Riesgo y Monitoreo Climático</div>
+            <div class="proy-lin">L-6 · Nodo 2 · ME1</div>
+          </div>
+        </div>
+        <div class="proy-body">
+          <div class="proy-desc">Fortalecer el SIMAC y crear un sistema de información departamental para gestión del riesgo de desastres que identifique amenazas y vulnerabilidades mediante mapeos de eventos hidrometeorológicos en todo el territorio.</div>
+          <div class="proy-acciones">
+            <div class="proy-accion">Fortalecer Comités de Conocimiento del Riesgo en Consejos Territoriales</div>
+            <div class="proy-accion">Identificar amenazas y vulnerabilidades con mapeos hidrometeorológicos</div>
+            <div class="proy-accion">Generar diálogos de saberes con comunidades étnicas para gestión del riesgo</div>
+          </div>
+          <div class="proy-meta">
+            <span class="proy-badge cp">Corto plazo</span>
+            <span class="proy-badge me1">ME 1</span>
+          </div>
+          <div class="proy-responsible">Sec. Medio Ambiente</div>
+        </div>
+      </div>
+
+      <div class="proy-card" data-cat="agua">
+        <div class="proy-header">
+          <div class="proy-ico agua">🌲</div>
+          <div>
+            <div class="proy-name">Conservación y Restauración Ecosistemas Estratégicos de Caldas</div>
+            <div class="proy-lin">L-5 · L-6 · Nodo 2 · ME1</div>
+          </div>
+        </div>
+        <div class="proy-body">
+          <div class="proy-desc">Proyectos de conservación, protección y restauración de los ecosistemas amenazados: páramo, bosque de Florencia, laguna de San Diego, Charca de Guarinocito. Valoración económica de servicios ambientales y mecanismos de pago.</div>
+          <div class="proy-acciones">
+            <div class="proy-accion">Valorar económicamente los servicios ambientales del territorio caldense</div>
+            <div class="proy-accion">Institucionalizar mecanismos de pago por servicios ambientales (PSA)</div>
+            <div class="proy-accion">Formular marco normativo para protección de páramos, humedales y BST</div>
+          </div>
+          <div class="proy-meta">
+            <span class="proy-badge mp">Mediano plazo</span>
+            <span class="proy-badge lp">+ Largo plazo</span>
+            <span class="proy-badge me1">ME 1</span>
+          </div>
+          <div class="proy-responsible">Sec. Medio Ambiente + Corpocaldas</div>
+        </div>
+      </div>
+
+      <div class="proy-card" data-cat="agua">
+        <div class="proy-header">
+          <div class="proy-ico agua">♻</div>
+          <div>
+            <div class="proy-name">Pacto por la Economía Circular en Caldas</div>
+            <div class="proy-lin">L-10 · Nodo 3 · ME2</div>
+          </div>
+        </div>
+        <div class="proy-body">
+          <div class="proy-desc">Estrategia de largo alcance que une esfuerzos público-privados para formular, diseñar e implementar nuevos modelos productivos, sostenibles y energéticamente eficientes. Acuerdo de voluntades entre actores sectoriales y gubernamentales.</div>
+          <div class="proy-acciones">
+            <div class="proy-accion">Identificar actores involucrados según nivel de importancia y competencia en el pacto</div>
+            <div class="proy-accion">Generar el acuerdo de voluntades y diseñar el pacto</div>
+            <div class="proy-accion">Evaluar el impacto de la implementación del pacto por economía circular</div>
+          </div>
+          <div class="proy-meta">
+            <span class="proy-badge lp">Largo plazo</span>
+            <span class="proy-badge me2">ME 2</span>
+          </div>
+          <div class="proy-responsible">Sec. Medio Ambiente + Sec. Desarrollo, Empleo e Innovación</div>
+        </div>
+      </div>
+
+      <!-- ===== MODELO PRODUCTIVO ===== -->
+      <div class="proy-card" data-cat="productivo">
+        <div class="proy-header">
+          <div class="proy-ico productivo">🏗</div>
+          <div>
+            <div class="proy-name">Plan Maestro de Infraestructura Tecnológica por Subregiones</div>
+            <div class="proy-lin">L-8 · Nodo 3 · ME2</div>
+          </div>
+        </div>
+        <div class="proy-body">
+          <div class="proy-desc">Diseño y ejecución de un plan maestro de infraestructura tecnológica para cada una de las 6 subregiones de Caldas, cerrando brechas de acceso a recursos tecnológicos y mejorando la competitividad y eficiencia de la industria manufacturera.</div>
+          <div class="proy-acciones">
+            <div class="proy-accion">Diseñar el plan maestro de infraestructura tecnológica por subregión</div>
+            <div class="proy-accion">Fortalecer programas de financiamiento y créditos para capacidades tecnológicas</div>
+            <div class="proy-accion">Ofertar programas técnicos y tecnológicos en subregiones identificando brechas laborales</div>
+          </div>
+          <div class="proy-meta">
+            <span class="proy-badge cp">Corto plazo</span>
+            <span class="proy-badge lp">→ Largo plazo</span>
+            <span class="proy-badge me2">ME 2</span>
+          </div>
+          <div class="proy-responsible">Sec. Desarrollo, Empleo e Innovación</div>
+        </div>
+      </div>
+
+      <div class="proy-card" data-cat="productivo">
+        <div class="proy-header">
+          <div class="proy-ico productivo">🌾</div>
+          <div>
+            <div class="proy-name">Casa Municipal en Tenencia y Gestión de la Tierra</div>
+            <div class="proy-lin">L-7 · Nodo 3 · ME2</div>
+          </div>
+        </div>
+        <div class="proy-body">
+          <div class="proy-desc">Espacio institucional de referencia en cada municipio para abordar la problemática de la ruralidad y la ruralidad dispersa, promoviendo acciones en torno a la tenencia, el uso productivo y la gestión de la tierra con criterios de sostenibilidad.</div>
+          <div class="proy-acciones">
+            <div class="proy-accion">Diseñar y presentar la propuesta ante las autoridades municipales</div>
+            <div class="proy-accion">Plan pedagógico para Gestores Digitales del Medio Rural</div>
+            <div class="proy-accion">Plan de ciclos cortos en producción, distribución y servicios rurales multidimensionales</div>
+          </div>
+          <div class="proy-meta">
+            <span class="proy-badge mp">Mediano plazo</span>
+            <span class="proy-badge me2">ME 2</span>
+          </div>
+          <div class="proy-responsible">Sec. Agricultura</div>
+        </div>
+      </div>
+
+      <div class="proy-card" data-cat="productivo">
+        <div class="proy-header">
+          <div class="proy-ico productivo">⚡</div>
+          <div>
+            <div class="proy-name">Pacto por la Gestión Energética de Caldas</div>
+            <div class="proy-lin">L-10 · Nodo 3 · ME2</div>
+          </div>
+        </div>
+        <div class="proy-body">
+          <div class="proy-desc">Estrategia departamental para diseñar e implementar un modelo de transición energética eficiente para la industria y la región, mejorando el indicador de eficiencia energética que hoy es el peor posicionado de Caldas en el IDC 2022.</div>
+          <div class="proy-acciones">
+            <div class="proy-accion">Identificar actores clave del sector energético por nivel de importancia y competencia</div>
+            <div class="proy-accion">Generar acuerdo de voluntades para el pacto energético departamental</div>
+            <div class="proy-accion">Diseñar modelos de transición energética para la industria y comunidades</div>
+          </div>
+          <div class="proy-meta">
+            <span class="proy-badge lp">Largo plazo</span>
+            <span class="proy-badge me2">ME 2</span>
+          </div>
+          <div class="proy-responsible">Sec. Medio Ambiente + Sec. Desarrollo e Innovación</div>
+        </div>
+      </div>
+
+      <!-- ===== EQUIDAD & EDUCACIÓN ===== -->
+      <div class="proy-card" data-cat="social">
+        <div class="proy-header">
+          <div class="proy-ico social">🏥</div>
+          <div>
+            <div class="proy-name">Centro de Investigación en Medicina Traslacional</div>
+            <div class="proy-lin">L-12 · Nodo 4 · ME3</div>
+          </div>
+        </div>
+        <div class="proy-body">
+          <div class="proy-desc">Creación, construcción y dotación de un centro de investigación que articule ciencias básicas biomédicas con atención en salud, con énfasis en atención primaria. Aprovechará los datos genómicos de la biodiversidad caldense para medicina de precisión.</div>
+          <div class="proy-acciones">
+            <div class="proy-accion">Promover convenios y diseñar infraestructura para el centro</div>
+            <div class="proy-accion">Optimizar conectividad digital de EPSs e IPSs en todos los municipios</div>
+            <div class="proy-accion">Gestionar recursos económicos para construcción y dotación</div>
+          </div>
+          <div class="proy-meta">
+            <span class="proy-badge lp">Largo plazo</span>
+            <span class="proy-badge me3">ME 3</span>
+          </div>
+          <div class="proy-responsible">Sec. Salud</div>
+        </div>
+      </div>
+
+      <div class="proy-card" data-cat="social">
+        <div class="proy-header">
+          <div class="proy-ico social">🏫</div>
+          <div>
+            <div class="proy-name">Descentralización CTeI — 6 Comités Subregionales + 27 Municipales</div>
+            <div class="proy-lin">L-13 · Nodo 4 · ME3</div>
+          </div>
+        </div>
+        <div class="proy-body">
+          <div class="proy-desc">Creación de 6 comités subregionales y 27 comités municipales de CTeI para descentralizar la estructura departamental. Actualmente las capacidades CTeI están centralizadas en Manizales. Objetivo: llevar la Misión a cada municipio del departamento.</div>
+          <div class="proy-acciones">
+            <div class="proy-accion">Crear comités subregionales en norte, oriente, sur, occidente, alto occidente y alto oriente</div>
+            <div class="proy-accion">Fortalecer investigación multinivel en subregiones</div>
+            <div class="proy-accion">Desarrollar estrategias de innovación social participativa</div>
+          </div>
+          <div class="proy-meta">
+            <span class="proy-badge cp">Corto plazo</span>
+            <span class="proy-badge me3">ME 3</span>
+          </div>
+          <div class="proy-responsible">CODECTI + Sec. Desarrollo, Empleo e Innovación</div>
+        </div>
+      </div>
+
+      <div class="proy-card" data-cat="social">
+        <div class="proy-header">
+          <div class="proy-ico social">📚</div>
+          <div>
+            <div class="proy-name">Pacto por la Educación para la Transformación Social y Productiva</div>
+            <div class="proy-lin">L-14 · Nodo 5 · ME3</div>
+          </div>
+        </div>
+        <div class="proy-body">
+          <div class="proy-desc">Acuerdo social que parte del reconocimiento de las particularidades territoriales de los 27 municipios, usa la educación como estrategia de cierre de brechas y consolida los tres hábitats educativos de Caldas como gran ecosistema de aprendizaje.</div>
+          <div class="proy-acciones">
+            <div class="proy-accion">Consolidar hábitat vocaciones científicas en todos los niveles educativos</div>
+            <div class="proy-accion">Hábitat educación básica y media: reconocimiento dinámicas sociales del territorio</div>
+            <div class="proy-accion">Hábitat educación técnica, tecnológica y superior para trabajo digno</div>
+          </div>
+          <div class="proy-meta">
+            <span class="proy-badge lp">Largo plazo</span>
+            <span class="proy-badge me3">ME 3</span>
+          </div>
+          <div class="proy-responsible">Sec. Educación + Sec. Desarrollo, Empleo e Innovación</div>
+        </div>
+      </div>
+
+      <div class="proy-card" data-cat="social">
+        <div class="proy-header">
+          <div class="proy-ico social">📱</div>
+          <div>
+            <div class="proy-name">Plan Departamental de Competencias Digitales y Tecnologías Emergentes</div>
+            <div class="proy-lin">L-11 · Nodo 4 · ME3</div>
+          </div>
+        </div>
+        <div class="proy-body">
+          <div class="proy-desc">Plan de formación en competencias digitales y tecnologías emergentes para reducir brechas en subregiones. Incluye diagnóstico de brechas digitales por género, generación, clase social y etnia, y soluciones de transformación digital para comunidades.</div>
+          <div class="proy-acciones">
+            <div class="proy-accion">Diagnosticar brechas digitales según distintos factores de exclusión en subregiones</div>
+            <div class="proy-accion">Formular plan de competencias digitales para comunidades del departamento</div>
+            <div class="proy-accion">Implementar plan de tecnologías emergentes con enfoque en trabajo inteligente e IoT</div>
+          </div>
+          <div class="proy-meta">
+            <span class="proy-badge cp">Corto plazo</span>
+            <span class="proy-badge mp">→ Mediano plazo</span>
+            <span class="proy-badge me3">ME 3</span>
+          </div>
+          <div class="proy-responsible">Sec. Desarrollo, Empleo e Innovación</div>
+        </div>
+      </div>
+
+    </div><!-- /proy-grid -->
+
+    <!-- RESUMEN ESTADÍSTICO -->
+    <div class="divider" style="margin-top:32px;"></div>
+    <h3 style="font-family:'Playfair Display',serif;font-size:17px;color:var(--verde-selva);margin-bottom:14px;">Resumen del Portafolio de Proyectos</h3>
+    <div class="cards-row">
+      <div class="kpi-card">
+        <div class="kpi-label">Total Proyectos</div>
+        <div class="kpi-value">20</div>
+        <div class="kpi-desc">proyectos estratégicos priorizados en 6 áreas temáticas</div>
+      </div>
+      <div class="kpi-card dorado">
+        <div class="kpi-label">Corto Plazo (1-3 años)</div>
+        <div class="kpi-value">8</div>
+        <div class="kpi-desc">proyectos de arranque inmediato</div>
+      </div>
+      <div class="kpi-card agua">
+        <div class="kpi-label">Mediano Plazo (3-5 años)</div>
+        <div class="kpi-value">7</div>
+        <div class="kpi-desc">proyectos de consolidación</div>
+      </div>
+      <div class="kpi-card naranja">
+        <div class="kpi-label">Largo Plazo (5-10 años)</div>
+        <div class="kpi-value">5</div>
+        <div class="kpi-desc">proyectos estructurantes de largo aliento</div>
+      </div>
+      <div class="kpi-card tierra">
+        <div class="kpi-label">Secretarías Involucradas</div>
+        <div class="kpi-value">8</div>
+        <div class="kpi-desc">secretarías + CODECTI lideran la cartera de proyectos</div>
+      </div>
+    </div>
+
+    <div class="panel" style="margin-top:4px;">
+      <div class="panel-title"><span class="icon">📊</span>Distribución del Portafolio por Área Temática</div>
+      <p class="panel-sub">Número de proyectos priorizados por cada área estratégica de la política CTeI</p>
+      <div class="chart-wrap">
+        <canvas id="chartProyectos"></canvas>
+      </div>
+    </div>
+
+    <script>
+    // FILTER LOGIC
+    document.querySelectorAll('.proy-filter').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.proy-filter').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        const filter = btn.dataset.filter;
+        document.querySelectorAll('.proy-card').forEach(card => {
+          if (filter === 'all' || card.dataset.cat === filter) {
+            card.style.display = '';
+          } else {
+            card.style.display = 'none';
+          }
+        });
+      });
+    });
+
+    // Chart proyectos
+    setTimeout(() => {
+      const cp = document.getElementById('chartProyectos');
+      if (cp && !cp.dataset.rendered) {
+        cp.dataset.rendered = '1';
+        new Chart(cp.getContext('2d'), {
+          type: 'bar',
+          data: {
+            labels: ['Bioeconomía', 'Economía\nCreativa', 'Datos &\nTecnología', 'Agua &\nAmbiente', 'Modelo\nProductivo', 'Equidad &\nEducación'],
+            datasets: [{
+              label: 'Proyectos priorizados',
+              data: [6, 3, 3, 4, 3, 4],
+              backgroundColor: ['#2d6a4f','#c9a227','#0077b6','#52b788','#e76f51','#8b5e3c'],
+              borderRadius: 6,
+            }]
+          },
+          options: {
+            responsive: true,
+            plugins: { legend: { display: false } },
+            scales: {
+              y: { beginAtZero: true, max: 8, ticks: { stepSize: 1, font: { family: 'DM Sans', size: 11 } }, grid: { color: '#f0ebe0' } },
+              x: { grid: { display: false }, ticks: { font: { family: 'DM Sans', size: 10 } } }
+            }
+          }
+        });
+      }
+    }, 300);
+    </script>
+
+  </div><!-- /proyectos section -->
+
+  <!-- ======= SECTION 8: CONTEXTO ======= -->
+  <div id="contexto" class="section">
+    <h2 class="section-heading">Contexto: Misión Internacional de Sabios 2019 y Caldas</h2>
+    <p class="section-subheading">Marco de referencia nacional y regional de la política de CTeI+E — del CONPES 4069 a la Misión de Sabios por Caldas 2020-2021, primer departamento en regionalizar la Misión Internacional.</p>
+
+    <div class="grid-2">
+      <div class="panel">
+        <div class="panel-title"><span class="icon">🌎</span>Misión Internacional de Sabios 2019</div>
+        <p class="panel-sub">47 expertos (32 colombianos + 15 internacionales) · 8 nodos temáticos → 3 retos nacionales</p>
+        <div style="margin-bottom:14px;">
+          <div style="font-size:13px;font-weight:600;color:var(--verde-selva);margin-bottom:8px;">3 Retos y 5 Misiones Nacionales</div>
+          <div class="nodo-barriers" style="margin:0;">
+            <div class="opp-item" style="color:var(--verde-selva);">Reto 1: <strong>Colombia Biodiversa</strong> → Misión 1: Colombia diversa, bioeconomía y economía creativa</div>
+            <div class="opp-item" style="color:var(--verde-selva);">Reto 1: Colombia Biodiversa → Misión 2: Agua y cambio climático</div>
+            <div class="opp-item" style="color:var(--verde-selva);">Reto 2: <strong>Colombia Productiva</strong> → Misión 3: Nuevo modelo productivo, sostenible y competitivo</div>
+            <div class="opp-item" style="color:var(--verde-selva);">Reto 3: <strong>Colombia Equitativa</strong> → Misión 4: Conocimiento e innovación para la equidad</div>
+            <div class="opp-item" style="color:var(--verde-selva);">Reto 3: Colombia Equitativa → Misión 5: Educar con calidad para el crecimiento</div>
+          </div>
+        </div>
+        <div style="font-size:13px;font-weight:600;color:var(--verde-selva);margin-bottom:8px;">8 Nodos de la Misión Internacional</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;">
+          <span class="lin-action-tag">Tecnologías convergentes e industrias 4.0</span>
+          <span class="lin-action-tag">Industrias creativas y culturales</span>
+          <span class="lin-action-tag">Energía sostenible</span>
+          <span class="lin-action-tag">Ciencias de la vida y salud</span>
+          <span class="lin-action-tag">Biotecnología, bioeconomía y medio ambiente</span>
+          <span class="lin-action-tag">Océanos y recursos hidrobiológicos</span>
+          <span class="lin-action-tag">Ciencias sociales y desarrollo humano</span>
+          <span class="lin-action-tag">Ciencias básicas y del espacio</span>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><span class="icon">🏔</span>Caldas: Primer Departamento en Regionalizar</div>
+        <p class="panel-sub">Desde el Plan de Desarrollo "Unidos es Posible" 2020-2023 hasta la Ordenanza 952</p>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-year">2020</div>
+            <div class="timeline-text"><strong>Inicio Misión de Sabios por Caldas.</strong> 37 comisionados. Caldas, primer departamento de Colombia en regionalizar la Misión Internacional.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2020-2021</div>
+            <div class="timeline-text">Fase I diagnóstica participativa con niños, jóvenes, mujeres, maestros, empresarios, investigadores y líderes comunitarios de los 27 municipios.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2021</div>
+            <div class="timeline-text">Publicación libro "Caldas: Equitativa, Productiva y Sustentable. Conocimiento para el Desarrollo" — CINDE, Gobernación de Caldas, OEI.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2022</div>
+            <div class="timeline-text">Elaboración Borrador de Lineamientos Política CTeI por CINDE + Secretaría de Desarrollo. Marco articulado con CONPES 4069.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2022</div>
+            <div class="timeline-text"><strong>Ordenanza 952 — Política Pública de CTeI del Departamento de Caldas.</strong> Adopción oficial por la Asamblea Departamental.</div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-year">2023</div>
+            <div class="timeline-text">Publicación libro IBOOK Misión de Sabios por Caldas con resultados, propuestas y lineamientos de cada nodo.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="panel">
+        <div class="panel-title"><span class="icon">📐</span>Biodiversidad de Caldas — Activos Estratégicos</div>
+        <p class="panel-sub">Ecosistemas estratégicos y diversidad étnico-cultural como base del modelo bioeconómico</p>
+        <div style="display:flex;flex-direction:column;gap:10px;margin-top:4px;">
+          <div style="background:rgba(26,71,49,0.06);border-radius:8px;padding:12px;">
+            <div style="font-size:12px;font-weight:700;color:var(--verde-selva);margin-bottom:4px;">🌄 Ecosistemas Estratégicos (Corpocaldas)</div>
+            <div style="font-size:12px;color:var(--gris-suave);line-height:1.6;">① Páramos (regulan recurso hídrico, carbono orgánico, alto endemismo). ② Humedales (diversidad flora y fauna, control inundaciones). ③ Bosque Seco Tropical — cuencas Magdalena y Cauca.</div>
+          </div>
+          <div style="background:rgba(201,162,39,0.08);border-radius:8px;padding:12px;">
+            <div style="font-size:12px;font-weight:700;color:var(--dorado);margin-bottom:4px;">🌍 Diversidad Étnica y Cultural</div>
+            <div style="font-size:12px;color:var(--gris-suave);line-height:1.6;">Pueblo Embera (occidente caldense — entre Palestina, Riosucio y Marmato). Comunidades afrodescendientes (La Dorada, Marmato, Supía, Anserma, Manizales). Mestizos colonización antioqueña.</div>
+          </div>
+          <div style="background:rgba(0,119,182,0.06);border-radius:8px;padding:12px;">
+            <div style="font-size:12px;font-weight:700;color:var(--azul-agua);margin-bottom:4px;">☕ Paisaje Cultural Cafetero</div>
+            <div style="font-size:12px;color:var(--gris-suave);line-height:1.6;">Declarado Patrimonio Cultural de la Humanidad por la UNESCO en 2011. Soporte del turismo cultural y la economía creativa. Ruta de la Diversidad Cultural + Carnaval de Riosucio.</div>
+          </div>
+          <div style="background:rgba(231,111,81,0.06);border-radius:8px;padding:12px;">
+            <div style="font-size:12px;font-weight:700;color:var(--naranja);margin-bottom:4px;">🦅 Turismo de Naturaleza</div>
+            <div style="font-size:12px;color:var(--gris-suave);line-height:1.6;">Sociedad Caldense de Ornitología. PNN Los Nevados. Reserva Río Blanco. Geoparque Volcán del Ruíz (aspirante UNESCO). Selva de Florencia. Charca de Guarinocito.</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-title"><span class="icon">🔗</span>Actores del Ecosistema CTeI Caldas</div>
+        <p class="panel-sub">Principales actores identificados en el IDIC 2021 y la cuádruple hélice de la Misión</p>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:4px;">
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--verde-selva);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">🏫 Academia</div>
+            <div style="display:flex;flex-direction:column;gap:4px;">
+              <span class="lin-action-tag" style="font-size:11px;">Universidad de Caldas</span>
+              <span class="lin-action-tag" style="font-size:11px;">U. Nacional Sede Manizales</span>
+              <span class="lin-action-tag" style="font-size:11px;">U. Autónoma de Manizales</span>
+              <span class="lin-action-tag" style="font-size:11px;">U. de Manizales</span>
+              <span class="lin-action-tag" style="font-size:11px;">U. Católica de Manizales</span>
+              <span class="lin-action-tag" style="font-size:11px;">CINDE - U. Manizales</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--dorado);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">🔬 I+D</div>
+            <div style="display:flex;flex-direction:column;gap:4px;">
+              <span class="lin-action-tag" style="font-size:11px;">Centro BIOS</span>
+              <span class="lin-action-tag" style="font-size:11px;">CIMAD</span>
+              <span class="lin-action-tag" style="font-size:11px;">CRECE</span>
+              <span class="lin-action-tag" style="font-size:11px;">NeuroCity Lab</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--naranja);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">🏛 Estado</div>
+            <div style="display:flex;flex-direction:column;gap:4px;">
+              <span class="lin-action-tag" style="font-size:11px;">Gobernación de Caldas</span>
+              <span class="lin-action-tag" style="font-size:11px;">Sec. Desarrollo e Innovación</span>
+              <span class="lin-action-tag" style="font-size:11px;">Corpocaldas</span>
+              <span class="lin-action-tag" style="font-size:11px;">CODECTI</span>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:12px;font-weight:700;color:var(--azul-agua);margin-bottom:6px;text-transform:uppercase;letter-spacing:0.5px;">🏢 Híbridos/Empresa</div>
+            <div style="display:flex;flex-direction:column;gap:4px;">
+              <span class="lin-action-tag" style="font-size:11px;">Cámara Comercio Manizales</span>
+              <span class="lin-action-tag" style="font-size:11px;">Manizales+</span>
+              <span class="lin-action-tag" style="font-size:11px;">Manizales Innova</span>
+              <span class="lin-action-tag" style="font-size:11px;">CHEC / Oncólogos Occ.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /main -->
+
+<div class="footer">
+  <div>
+    <div class="footer-author">
+      <span style="font-size:18px;">🌿</span>
+      <div>
+        <div class="footer-author-name">Dashboard elaborado por: Eduardo Gómez Restrepo</div>
+        <div class="footer-author-role">Líder del Nodo de Bioeconomía · Misión de Sabios por Caldas</div>
+      </div>
+      <span class="footer-author-sep">|</span>
+      <a href="https://www.linkedin.com/in/eduardobiocolombia/" target="_blank">LinkedIn: eduardobiocolombia</a>
+    </div>
+  </div>
+  <div>
+    <strong>Misión de Sabios por Caldas 2020-2021</strong> · Política Pública CTeI — Ordenanza 952 · Gobernación de Caldas | CINDE | OEI
+  </div>
+  <div style="margin-top:4px;">Elaborado con base en documentos oficiales de la Misión · © Eduardo Gómez Restrepo</div>
+</div>
+
+<script>
+// NAV
+document.querySelectorAll('.nav-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    tab.classList.add('active');
+    document.getElementById(tab.dataset.section).classList.add('active');
+    setTimeout(renderCharts, 50);
+  });
+});
+
+// CHARTS
+let chartsRendered = false;
+
+function renderCharts() {
+  if (chartsRendered) return;
+  chartsRendered = true;
+
+  const palette = ['#2d6a4f', '#40916c', '#52b788', '#74c69d', '#c9a227', '#0077b6', '#e76f51', '#8b5e3c'];
+
+  // Chart 1: Bioeconomy capacity
+  const c1 = document.getElementById('chartBiocap');
+  if (c1) {
+    new Chart(c1.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: ['Producción y\nConsumo Local', 'Aprovechamiento\nIntegral', 'Regeneración\nBiodiversidad', 'Uso Recursos\nNaturales'],
+        datasets: [
+          {
+            label: 'N° Proyectos',
+            data: [247, 76, 55, 52],
+            backgroundColor: '#2d6a4f',
+            borderRadius: 4,
+          },
+          {
+            label: 'N° Artículos',
+            data: [583, 194, 152, 56],
+            backgroundColor: '#74c69d',
+            borderRadius: 4,
+          }
+        ]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { position: 'top', labels: { font: { family: 'DM Sans', size: 11 } } }
+        },
+        scales: {
+          y: { grid: { color: '#f0ebe0' }, ticks: { font: { family: 'DM Sans', size: 11 } } },
+          x: { grid: { display: false }, ticks: { font: { family: 'DM Sans', size: 10 } } }
+        }
+      }
+    });
+  }
+
+  // Chart 2: Principios bioeconomia pie
+  const c2 = document.getElementById('chartPrincipios');
+  if (c2) {
+    new Chart(c2.getContext('2d'), {
+      type: 'doughnut',
+      data: {
+        labels: ['Producción y Consumo Local', 'Aprovechamiento Integral', 'Regeneración Biodiversidad', 'Uso RN y Energías Limpias'],
+        datasets: [{
+          data: [247, 76, 55, 52],
+          backgroundColor: ['#2d6a4f', '#c9a227', '#0077b6', '#e76f51'],
+          borderWidth: 0,
+          hoverOffset: 6
+        }]
+      },
+      options: {
+        responsive: true,
+        cutout: '62%',
+        plugins: {
+          legend: { position: 'right', labels: { font: { family: 'DM Sans', size: 11 }, boxWidth: 12, padding: 10 } },
+          tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.parsed} proyectos` } }
+        }
+      }
+    });
+  }
+
+  // Chart 3: Lineamientos distribution
+  const c3 = document.getElementById('chartLineamientos');
+  if (c3) {
+    new Chart(c3.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: ['ME1 · Nodo 1\nBioeconomía', 'ME1 · Nodo 2\nAgua y Clima', 'ME2 · Nodo 3\nModelo Productivo', 'ME3 · Nodo 4\nEquidad', 'ME3 · Nodo 5\nEducación'],
+        datasets: [{
+          label: 'Lineamientos',
+          data: [4, 2, 4, 3, 1],
+          backgroundColor: ['#2d6a4f', '#0077b6', '#e76f51', '#c9a227', '#8b5e3c'],
+          borderRadius: 6,
+        }]
+      },
+      options: {
+        responsive: true,
+        plugins: {
+          legend: { display: false },
+          tooltip: { callbacks: { label: ctx => ` ${ctx.parsed.y} lineamientos` } }
+        },
+        scales: {
+          y: {
+            beginAtZero: true, max: 5,
+            grid: { color: '#f0ebe0' },
+            ticks: { stepSize: 1, font: { family: 'DM Sans', size: 11 } }
+          },
+          x: { grid: { display: false }, ticks: { font: { family: 'DM Sans', size: 10 } } }
+        }
+      }
+    });
+  }
+
+  // Chart 4: Plan de acción por plazos
+  const c4 = document.getElementById('chartPlazos');
+  if (c4) {
+    new Chart(c4.getContext('2d'), {
+      type: 'bar',
+      data: {
+        labels: ['L-1 Ecoef.', 'L-2 Bioec.', 'L-3 E.Cre.', 'L-4 Espec.', 'L-5 Ecos.', 'L-6 Riesgo', 'L-7 Tierra', 'L-8 Manuf.', 'L-9 Sofis.', 'L-10 EC', 'L-11 TIC', 'L-12 Salud', 'L-13 Entorno', 'L-14 Educ.'],
+        datasets: [
+          { label: 'Corto (1-3 años)', data: [2,2,2,1,1,1,1,1,1,1,1,0,1,0], backgroundColor: '#52b788', borderRadius: 3 },
+          { label: 'Mediano (3-5 años)', data: [1,2,1,2,1,1,1,1,1,0,1,1,1,0], backgroundColor: '#c9a227', borderRadius: 3 },
+          { label: 'Largo (5-10 años)', data: [0,1,0,0,0,0,0,1,0,2,0,1,1,1], backgroundColor: '#e76f51', borderRadius: 3 }
+        ]
+      },
+      options: {
+        responsive: true,
+        scales: {
+          x: { stacked: true, grid: { display: false }, ticks: { font: { family: 'DM Sans', size: 9 } } },
+          y: { stacked: true, grid: { color: '#f0ebe0' }, ticks: { font: { family: 'DM Sans', size: 11 }, stepSize: 1 } }
+        },
+        plugins: {
+          legend: { position: 'top', labels: { font: { family: 'DM Sans', size: 11 }, boxWidth: 12 } }
+        }
+      }
+    });
+  }
+}
+
+// Initial render
+setTimeout(renderCharts, 200);
+</script>
+</body>
+</html>
